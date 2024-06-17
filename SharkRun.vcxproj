@@ -152,7 +152,7 @@ xcopy "$(ProjectDir)Assets\*" "$(OutDir)Assets\" /s /r /y /q</Command>
       <SDLCheck>true</SDLCheck>
       <TreatWarningAsError>true</TreatWarningAsError>
       <CompileAs>CompileAsC</CompileAs>
-      <PreprocessorDefinitions>_MBCS;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <UndefinePreprocessorDefinitions>_CONSOLE</UndefinePreprocessorDefinitions>
       <CallingConvention>Cdecl</CallingConvention>
       <AdditionalOptions>/wd4100 %(AdditionalOptions)</AdditionalOptions>
@@ -206,6 +206,7 @@ xcopy "$(ProjectDir)Assets\*" "$(OutDir)Assets\" /s /r /y /q</Command>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
+    <ClInclude Include="Header.h" />
     <ClInclude Include="Platform.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Shark.h" />
