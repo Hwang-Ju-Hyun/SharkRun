@@ -1,5 +1,4 @@
 #include "Platform.h"
-
 void LoadVectorFromFile(CP_Vector* _vec, FILE* _inFile)
 {
 	char str[BUFFERSIZE] = { '\0' };
