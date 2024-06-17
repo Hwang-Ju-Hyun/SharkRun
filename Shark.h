@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Header.h"
+
 struct Shark
 {
 	float x, y;

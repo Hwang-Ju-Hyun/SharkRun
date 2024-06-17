@@ -1,23 +1,31 @@
 #include "Platform.h"
-void LoadVectorFromFile(CP_Vector* _vec, FILE* _inFile)
+
+void LoadPosFromFile(CP_Vector* pos, FILE* _inFile)
 {
 	char str[BUFFERSIZE] = { '\0' };
 	fgets(str, BUFFERSIZE, _inFile);
-	sscanf_s(str, "%f %f", &_vec->x, &_vec->y);
+	sscanf(str, "%f %f", &pos->x, &pos->y);
 }
 
-void LoadIntegerFromFile(int* _value, FILE* _inFile)
+void LoadGapFromFile(CP_Vector* g, FILE* _inFile)
 {
 	char str[BUFFERSIZE] = { '\0' };
 	fgets(str, BUFFERSIZE, _inFile);
-	sscanf_s(str, "%d",_value);
+	sscanf(str, "%f %f", &g->x, &g->y);
 }
 
-void LoadFloatFromFile(float* _value, FILE* _inFile)
+void LoadTotalFromFile(int* n, FILE* _inFile)
 {
 	char str[BUFFERSIZE] = { '\0' };
 	fgets(str, BUFFERSIZE, _inFile);
-	sscanf_s(str, "%f",_value);
+	sscanf(str, "%d", n);
+}
+
+void LoadSizeFromFile(float* w, float* h, FILE* _inFile)
+{
+	char str[BUFFERSIZE] = { '\0' };
+	fgets(str, BUFFERSIZE, _inFile);
+	sscanf(str, "%f %f", w, h);
 }
 
 void LoadColorFromFile(CP_Color* _col, FILE* _inFile)
@@ -25,43 +33,63 @@ void LoadColorFromFile(CP_Color* _col, FILE* _inFile)
 	char str[BUFFERSIZE] = { '\0' };
 	fgets(str, BUFFERSIZE, _inFile);
 
-	int color[4] = { 0 };
+	int c[4] = { 0 };
 
-	sscanf_s(str, "%d %d %d %d", &color[0], &color[1],
-		&color[2], &color[3]);
+	sscanf(str, "%d %d %d %d", &c[0], &c[1], &c[2], &c[3]);
 
 	for (int i = 0; i < 4; i++)
-		_col->rgba[i] = (char)color[i];
+		_col->rgba[i] = (char)c[i];
+	
 }
 
-void Platform_Load(FILE* _inFile, char* str)
+void Platform_Load(char* fileName, struct Platform* p)
 {
 
-	_inFile=fopen(str, "r");
+	FILE* _inFile = fopen(fileName, "rt");
 
 	if (_inFile == NULL)
 	{
-		printf("Error! Platform File is not exists : (function)Map_Load");
+		printf("Error! Platform File is not exists : (function)Map_Load\n");
 		return;
 	}
 
+	//char str[BUFFERSIZE] = { '\0' };
+
 	//MAP_LOAD	
 	//1. ÇÃ·§Æû °¹¼ö ºÒ·¯¿À±â
-	int i_value = 0;
-	LoadIntegerFromFile(&i_value, _inFile);
+	LoadTotalFromFile(&p->totalNum, _inFile);
+
 	//2. ÇÃ·§Æû Position
-	CP_Vector CP_Pos;
-	LoadVectorFromFile(&CP_Pos, _inFile);
+	LoadPosFromFile(&p->Pos, _inFile);
 	
 	//3. ÇÃ·§Æû »çÀÌÁî
-	float f_value;
-	LoadFloatFromFile(&f_value, _inFile);
-	LoadFloatFromFile(&f_value, _inFile);
+	LoadSizeFromFile(&p->width, &p->height, _inFile);
+
 	//4. gap »çÀÌÁî
-	CP_Vector CP_Gap;
-	LoadVectorFromFile(&CP_Gap, _inFile);		
+	LoadGapFromFile(&p->gap, _inFile);		
+
+	//color
+	LoadColorFromFile(&p->color, _inFile);
 
 	//5. ÇÃ·§Æû Å¸ÀÔ <- º¸·ùÁß 
-	int type;
-	LoadIntegerFromFile(&type, _inFile);
+	LoadTotalFromFile(&p->type, _inFile);
+	//³ªÁß¿¡ ÇÕÄ¥°Å¶ó ÀÏ´Ü Total
+
+	fclose(_inFile);
+}
+
+void Draw_Platform(struct Platform* p)
+{
+	CP_Settings_StrokeWeight(1.0f);
+	CP_Settings_Fill(p->color);
+	CP_Graphics_DrawRect(p->Pos.x, p->Pos.y, p->width, p->height);
+
+}
+void Save_Platform(char* fileName, struct Platform* p)
+{
+	FILE* fp = fopen(fileName, "wt");
+
+	if (fp == NULL) return;
+
+	fclose(fp);
 }
