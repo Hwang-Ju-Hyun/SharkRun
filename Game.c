@@ -10,7 +10,8 @@ void game_init(void)
 	Player_Load("tile.dat", &player);
 	//플랫폼 초기로드
 	Platform_Load("tile.dat", &platforms);	
-	SetJump(&player, 30.f, 60.f, 0.f);
+	//점프 구현 초기 세팅
+	SetJump(&player, 30.f/*속도*/, 70.f/*중력*/, 0.f);
 	printf("n = %d, pos = %f %f, size = %f %f\n",
 		platforms.totalNum, platforms.Pos.x, platforms.Pos.y, platforms.width, platforms.height);
 	
@@ -29,24 +30,30 @@ void game_update(void)
 	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
 	CP_Settings_TextSize(50.0f);
 	CP_Font_DrawText("Game", WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
-
+	float dt = CP_System_GetDt();	
+	
 	if(CP_Input_KeyDown(KEY_SPACE))//점프
 	{		
-		player.JumpKeyPressed = true;
+		player.JumpKeyPressed = true;		
 	}
 	if (CP_Input_KeyDown(KEY_D))
 	{		 
-		float right = 30.f;
+		float right = 150.f*dt;
 		CP_Vector c_rt = {(player.Pos.x + right),player.Pos.y+0.f };
 		SetPos(&player, c_rt);
 	}
 	if (CP_Input_KeyDown(KEY_A))
 	{
-		float left = -30.f;
+		float left = -150.f*dt;
 		CP_Vector c_lt = { player.Pos.x + left,player.Pos.y + 0.f };
 		SetPos(&player, c_lt);		
-	}	
-	Jump(&player);
+	}
+	if (player.JumpKeyPressed == true)
+	{
+		Jump(&player);
+		CP_Vector pos = { player.Pos.x,player.Pos.y + player.JumHeight };
+		SetPos(&player, pos);
+	}		
 
 	//메인메뉴로 진입
 	if (CP_Input_MouseTriggered(MOUSE_BUTTON_RIGHT)){CP_Engine_SetNextGameState(main_init, main_update, main_exit);}

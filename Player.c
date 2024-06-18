@@ -55,21 +55,20 @@ void SetJump(struct Player* _pPlayer, float _vel, float _gra, float _jumpHeight)
 	_pPlayer->JumHeight = _jumpHeight;
 }
 
-void Jump(struct Player* _pPlayer)
-{
-	
-	if (_pPlayer->JumpKeyPressed == false)
-		return;
-	if (_pPlayer->velocity <= -300.f)
+void Jump(struct Player* _pPlayer) //
+{		
+	if (_pPlayer->velocity <= -60.f)
 	{
-		_pPlayer->velocity = 300.f;
-		_pPlayer->JumpKeyPressed = true;
+		_pPlayer->Pos.y -= (_pPlayer->velocity * 0.04f);
+		_pPlayer->velocity = 30.f;
+		_pPlayer->JumpKeyPressed = false;
 		_pPlayer->JumHeight = 0.f;
+
+		return;
 	}
-	_pPlayer->JumHeight -= _pPlayer->velocity * CP_System_GetDt();
-	_pPlayer->velocity -= _pPlayer->Gravity * CP_System_GetDt();
-	CP_Vector pos = { _pPlayer->Pos.x,_pPlayer->Pos.y + _pPlayer->JumHeight };
-	SetPos(_pPlayer,pos);
+	_pPlayer->JumHeight = _pPlayer->JumHeight - (_pPlayer->velocity * 0.04f);
+	_pPlayer->velocity =  _pPlayer->velocity  - (_pPlayer->Gravity  * 0.04f);
+	
 }
 
 
