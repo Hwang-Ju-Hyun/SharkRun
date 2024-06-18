@@ -7,6 +7,18 @@ struct Platforms platforms;
 struct Shark shark;
 struct Player player;
 
+void GravityUpdate()
+{
+	for (int i = 0; i < platforms.total; i++)
+	{
+		bool Col = IsCollision(&player, &platforms.platform[i]);
+		if (Col == true)
+			player.IsGrounded = GROUND;
+		else
+			player.IsGrounded = AIR;
+	}	
+}
+
 void game_init(void)
 {
 	white = CP_Color_Create(255, 255, 255, 255);	
@@ -61,12 +73,9 @@ void game_update(void)
 		CP_Vector c_lt = { player.Pos.x + left,player.Pos.y + 0.f };
 		SetPos(&player, c_lt);		
 	}	
-	if (player.JumpKeyPressed == true)
-	{
-		Jump(&player);
-		CP_Vector pos = { player.Pos.x,player.Pos.y + player.JumHeight };
-		SetPos(&player, pos);
-	}		
+	GravityUpdate();
+	Jump(&player);
+	
 	
 
 	for (int i = 0; i < platforms.total; i++)

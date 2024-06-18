@@ -26,12 +26,9 @@ struct Player
 
 	float Gravity;  //Áß·Â(³«ÇÏ)
 	float JumHeight;
-
-
-
 	
 	struct Collision col;
-
+	enum GROUND_OR_AIR IsGrounded;
 	bool JumpKeyPressed;
 };
 
