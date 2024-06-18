@@ -1,6 +1,15 @@
 #pragma once
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <math.h>
 
-#include "Header.h"
+#include "cprocessing.h"
+
+#include "Player.h"
+#include "Platform.h"
+#include "Shark.h"
+
 
 void game_init(void);
 void game_update(void);

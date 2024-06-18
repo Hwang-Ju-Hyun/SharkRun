@@ -1,18 +1,29 @@
 #include "Game.h"
 
 CP_Color white;
-struct Platform platforms;
+float time = 0;
+
+struct Platforms platforms;
+struct Shark shark;
+struct Player player;
 
 void game_init(void)
 {
 	white = CP_Color_Create(255, 255, 255, 255);
+
 	Platform_Load("tile.dat", &platforms);
 
-	printf("n = %d, pos = %f %f, size = %f %f\n",
-		platforms.totalNum, platforms.Pos.x, platforms.Pos.y, platforms.width, platforms.height);
-	
-	printf("gap = %f %f, type = %d, color = %d %d %d %d\n",
-		platforms.gap.x, platforms.gap.y, platforms.type, platforms.color.r, platforms.color.g, platforms.color.b, platforms.color.a);
+	for (int i = 0; i < platforms.total; i++)
+	{
+		printf("n = %d, pos = %f %f, size = %f %f\n",
+			platforms.total, platforms.platform[i].Pos.x, platforms.platform[i].Pos.y, platforms.platform[i].width, platforms.platform[i].height);
+		
+		printf("gap = %f %f, type = %d, color = %d %d %d %d\n",
+			platforms.platform[i].gap.x, platforms.platform[i].gap.y, platforms.platform[i].type, platforms.platform[i].color.r, platforms.platform[i].color.g, platforms.platform[i].color.b, platforms.platform[i].color.a);
+	}
+
+	SharkInit(&shark);
+	PlayerInit(&player);
 }
 
 void game_update(void)
@@ -27,14 +38,26 @@ void game_update(void)
 
 	if (CP_Input_MouseTriggered(MOUSE_BUTTON_RIGHT))
 	{
-		CP_Engine_SetNextGameState(main_init, main_update, main_exit);
+		CP_Engine_SetNextGameState(game_init, game_update, game_exit);
 	}
 
-	Draw_Platform(&platforms);
+	for (int i = 0; i < platforms.total; i++)
+		Draw_Platform(&platforms.platform[i]);
+
+	time = CP_System_GetDt();
+	SharkDraw(&shark);
+	SharkMove(&shark, time);
+
+	if (CP_Input_KeyTriggered(KEY_1))
+		SharkSpeedUp(&shark, 30.0f);
+
+	//PlayerDraw(&player);
+	PlayerMove(&player, time);
 }
 
 void game_exit(void)
 {
 
 	//struct Platform 동적 할당 시 free
+	SharkFree(&shark);
 }

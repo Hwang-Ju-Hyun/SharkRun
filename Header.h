@@ -12,10 +12,10 @@
 #include "Shark.h"
 #include "Game.h"
 
+
+
 #define WINDOW_WIDTH 1280
 #define WINDOW_HEIGHT 720
-
-
 
 
 enum BUFFER_SIZE
@@ -23,7 +23,7 @@ enum BUFFER_SIZE
 	BUFFERSIZE = 512
 };
 
-enum PLATFORM_TYPE
+enum pTYPE
 {
 	NORMAL = 0,
 	//ºÒ, ¹°...ETC
