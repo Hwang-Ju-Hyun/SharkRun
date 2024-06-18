@@ -11,6 +11,7 @@
 #include "Platform.h"
 #include "Shark.h"
 #include "Game.h"
+#include "Collision.h"
 
 #define WINDOW_WIDTH 1280
 #define WINDOW_HEIGHT 720
@@ -19,6 +20,12 @@
 enum BUFFER_SIZE
 {
 	BUFFERSIZE = 512
+};
+
+enum GROUND_OR_AIR
+{
+	GROUND = 0,
+	AIR = 1
 };
 
 enum PLATFORM_TYPE

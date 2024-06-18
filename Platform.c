@@ -1,4 +1,5 @@
 #include "Platform.h"
+#include "Header.h"
 
 void LoadPosFromFile(CP_Vector* pos, FILE* _inFile)
 {
@@ -85,6 +86,7 @@ void Draw_Platform(struct Platform* p)
 	CP_Graphics_DrawRect(p->Pos.x, p->Pos.y, p->width, p->height);
 
 }
+
 void Save_Platform(char* fileName, struct Platform* p)
 {
 	FILE* fp = fopen(fileName, "wt");

@@ -7,7 +7,7 @@ void game_init(void)
 {
 	white = CP_Color_Create(255, 255, 255, 255);
 	//플레이어 초기로드
-	Player_Load("tile.dat", &player);
+	Player_Load("player.dat", &player);
 	//플랫폼 초기로드
 	Platform_Load("tile.dat", &platforms);	
 	//점프 구현 초기 세팅
@@ -47,17 +47,17 @@ void game_update(void)
 		float left = -150.f*dt;
 		CP_Vector c_lt = { player.Pos.x + left,player.Pos.y + 0.f };
 		SetPos(&player, c_lt);		
-	}
+	}	
 	if (player.JumpKeyPressed == true)
 	{
 		Jump(&player);
 		CP_Vector pos = { player.Pos.x,player.Pos.y + player.JumHeight };
 		SetPos(&player, pos);
 	}		
+	
 
 	//메인메뉴로 진입
-	if (CP_Input_MouseTriggered(MOUSE_BUTTON_RIGHT)){CP_Engine_SetNextGameState(main_init, main_update, main_exit);}
-
+	if (CP_Input_MouseTriggered(MOUSE_BUTTON_RIGHT)){CP_Engine_SetNextGameState(main_init, main_update, main_exit);}	
 
 	//=============
 	//====Render===

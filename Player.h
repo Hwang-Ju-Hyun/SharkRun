@@ -1,5 +1,8 @@
 #pragma once
 #include "Header.h"
+#include "Collision.h"
+
+
 
 struct Player
 {
@@ -13,6 +16,7 @@ struct Player
 	float Gravity;  //Áß·Â(³«ÇÏ)
 	float JumHeight;
 	
+	struct Collision col;
 	bool JumpKeyPressed;
 };
 
