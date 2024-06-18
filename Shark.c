@@ -1,4 +1,1 @@
-#include "Game.h"
-#include "Shark.h"
-
-struct Shark shark;
+#include "Header.h"

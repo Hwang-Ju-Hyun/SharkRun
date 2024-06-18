@@ -1,10 +1,11 @@
 #pragma once
-#include "Game.h"
+#include "Header.h"
 
 struct Player
 {
 	CP_Image res;
-	float x, y;
-	float size;
+	CP_Vector Pos;
+	float width;
+	float height;
 	float velocity;
 };
