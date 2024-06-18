@@ -11,8 +11,10 @@ void game_init(void)
 {
 	white = CP_Color_Create(255, 255, 255, 255);
 
+	Player_Load("player.dat", &player);
 	Platform_Load("tile.dat", &platforms);
 
+	SetJump(&player, 30.f/*속도*/, 70.f/*중력*/, 0.f);
 	for (int i = 0; i < platforms.total; i++)
 	{
 		printf("n = %d, pos = %f %f, size = %f %f\n",
@@ -23,7 +25,7 @@ void game_init(void)
 	}
 
 	SharkInit(&shark);
-	PlayerInit(&player);
+	//PlayerInit(&player);
 }
 
 void game_update(void)
@@ -31,20 +33,48 @@ void game_update(void)
 	CP_Graphics_ClearBackground(white);
 
 	CP_Settings_Fill(CP_Color_Create(0, 255, 255, 255));
+	
 
+	//GameScene진입
 	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
 	CP_Settings_TextSize(50.0f);
 	CP_Font_DrawText("Game", WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
 
+
 	if (CP_Input_MouseTriggered(MOUSE_BUTTON_RIGHT))
 	{
-		CP_Engine_SetNextGameState(game_init, game_update, game_exit);
+		CP_Engine_SetNextGameState(main_init, main_update, main_exit);
 	}
+
+	time = CP_System_GetDt();
+	
+	if(CP_Input_KeyDown(KEY_SPACE))//점프
+	{		
+		player.JumpKeyPressed = true;		
+
+	}
+	if (CP_Input_KeyDown(KEY_D))
+	{		 
+		float right = 150.f * time;
+		CP_Vector c_rt = {(player.Pos.x + right),player.Pos.y+0.f };
+		SetPos(&player, c_rt);
+	}
+	if (CP_Input_KeyDown(KEY_A))
+	{
+		float left = -150.f * time;
+		CP_Vector c_lt = { player.Pos.x + left,player.Pos.y + 0.f };
+		SetPos(&player, c_lt);		
+	}
+	if (player.JumpKeyPressed == true)
+	{
+		Jump(&player);
+		CP_Vector pos = { player.Pos.x,player.Pos.y + player.JumHeight };
+		SetPos(&player, pos);
+	}		
 
 	for (int i = 0; i < platforms.total; i++)
 		Draw_Platform(&platforms.platform[i]);
 
-	time = CP_System_GetDt();
 	SharkDraw(&shark);
 	SharkMove(&shark, time);
 
@@ -53,6 +83,10 @@ void game_update(void)
 
 	//PlayerDraw(&player);
 	PlayerMove(&player, time);
+	//=============
+	//====Render===
+	//=============
+	Draw_Player(&player);
 }
 
 void game_exit(void)

@@ -19,7 +19,6 @@ void LoadPosFromFile(CP_Vector* pos, FILE* _inFile)
 void LoadSizeFromFile(float* w, float* h, FILE* _inFile)
 {
 	char str[BUFFERSIZE] = { '\0' };
-	if (fgets(str, BUFFERSIZE, _inFile) == NULL) printf("d\n");
 	fgets(str, BUFFERSIZE, _inFile);
 	sscanf(str, "%f %f", w, h);
 }

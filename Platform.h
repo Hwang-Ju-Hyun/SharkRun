@@ -24,9 +24,11 @@ void LoadPosFromFile(CP_Vector* pos , FILE* _inFile);
 void LoadSizeFromFile(float* w, float* h, FILE* _inFile);
 void LoadGapFromFile(CP_Vector* g, FILE* _inFile);
 void LoadColorFromFile(CP_Color* _col, FILE* _inFile);
+
 void LoadTypeFromFile(enum pTYPE* pt, FILE* _inFile);
 void LoadPlatformFromFile(struct Platforms* p, FILE* _inFile);
 void Platform_Load(char* fileName, struct Platforms* p);
+
 //void LoadPlatform(char* fileName)
 void Draw_Platform(struct Platform* p);
 void Save_Platform(char* fileName, struct Platforms* p);

@@ -26,6 +26,7 @@ void main_update(void)
 
 void main_exit(void)
 {
+	//exit
 }
 
 int main(void)
