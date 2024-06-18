@@ -3,7 +3,7 @@
 
 void SharkInit(struct Shark* s)
 {
-	s->res = CP_Image_Load("shark.png");
+	s->res = CP_Image_Load("Assets\\shark.png");
 
 	if (s->res == NULL) return;
 

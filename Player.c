@@ -2,8 +2,8 @@
 
 void PlayerInit(struct Player* p)
 {
-	p->res[0] = CP_Image_Load("dog_left.png");
-	p->res[1] = CP_Image_Load("dog_right.png");
+	p->res[0] = CP_Image_Load("Assets\\dog_left.png");
+	p->res[1] = CP_Image_Load("Assets\\dog_right.png");
 
 	p->Pos.x = 140.0f;
 	p->Pos.y = 600.0f - 30.0f;
