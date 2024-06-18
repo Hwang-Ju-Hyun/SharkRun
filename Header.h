@@ -16,8 +16,6 @@
 #define WINDOW_HEIGHT 720
 
 
-
-
 enum BUFFER_SIZE
 {
 	BUFFERSIZE = 512

@@ -19,6 +19,7 @@ void LoadTotalFromFile(int* n, FILE* _inFile);
 void LoadSizeFromFile(float* w, float* h, FILE* _inFile);
 void LoadColorFromFile(CP_Color* _col, FILE* _inFile);
 
+
 void Platform_Load(char* fileName, struct Platform* p);
 //void LoadPlatform(char* fileName)
 void Draw_Platform(struct Platform* p);
