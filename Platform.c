@@ -1,4 +1,5 @@
 #include "Platform.h"
+#include "Header.h"
 
 
 void LoadTotalFromFile(int* n, FILE* _inFile)
@@ -104,12 +105,4 @@ void Draw_Platform(struct Platform* p)
 	CP_Settings_Fill(p->color);
 	CP_Graphics_DrawRect(p->Pos.x, p->Pos.y, p->width, p->height);
 
-}
-void Save_Platform(char* fileName, struct Platforms* p)
-{
-	FILE* fp = fopen(fileName, "wt");
-
-	if (fp == NULL) return;
-
-	fclose(fp);
 }

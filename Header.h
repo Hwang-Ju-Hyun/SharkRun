@@ -11,6 +11,7 @@
 #include "Platform.h"
 #include "Shark.h"
 #include "Game.h"
+#include "Collision.h"
 
 
 
@@ -23,7 +24,14 @@ enum BUFFER_SIZE
 	BUFFERSIZE = 512
 };
 
-enum pTYPE
+
+enum GROUND_OR_AIR
+{
+	GROUND = 0,
+	AIR = 1
+};
+
+enum PLATFORM_TYPE
 {
 	NORMAL = 0,
 	//ºÒ, ¹°...ETC

@@ -1,5 +1,7 @@
 #pragma once
 #include "Game.h"
+#include "Header.h"
+#include "Collision.h"
 
 enum direction
 {
@@ -24,6 +26,11 @@ struct Player
 
 	float Gravity;  //Áß·Â(³«ÇÏ)
 	float JumHeight;
+
+
+
+	
+	struct Collision col;
 
 	bool JumpKeyPressed;
 };

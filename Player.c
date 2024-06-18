@@ -1,4 +1,6 @@
+#include "Header.h"
 #include "Player.h"
+#include "Collision.h"
 
 void PlayerInit(struct Player* p)
 {
@@ -59,9 +61,9 @@ void SetPos(struct Player* _pPlayer, CP_Vector _pVec){_pPlayer->Pos = _pVec;}
 void SetWidth(struct Player* _pPlayer, float _w){_pPlayer->width = _w;}
 void SetHeight(struct Player* _pPlayer, float _h){_pPlayer->height = _h;}
 
-const CP_Vector GetPos(struct Player* _pPlayer){return _pPlayer->Pos;}
-const float GetHeight(struct Player* _pPlayer){return _pPlayer->height;}
-const float GetWidth(struct Player* _pPlayer) { return _pPlayer->width; }
+const CP_Vector GetPos(struct Player* _pPlayer)			{return _pPlayer->Pos;}
+const float GetHeight(struct Player* _pPlayer)			{return _pPlayer->height;}
+const float GetWidth(struct Player* _pPlayer)			{return _pPlayer->width; }
 
 void LoadVelocityFromFile(float* _vel, FILE* _inFile)
 {
@@ -110,20 +112,18 @@ void SetJump(struct Player* _pPlayer, float _vel, float _gra, float _jumpHeight)
 	_pPlayer->JumHeight = _jumpHeight;
 }
 
-void Jump(struct Player* _pPlayer) //
-{		
+void Jump(struct Player* _pPlayer)
+{					
 	if (_pPlayer->velocity <= -60.f)
 	{
 		_pPlayer->Pos.y -= (_pPlayer->velocity * 0.04f);
 		_pPlayer->velocity = 30.f;
 		_pPlayer->JumpKeyPressed = false;
 		_pPlayer->JumHeight = 0.f;
-
 		return;
 	}
 	_pPlayer->JumHeight = _pPlayer->JumHeight - (_pPlayer->velocity * 0.04f);
-	_pPlayer->velocity =  _pPlayer->velocity  - (_pPlayer->Gravity  * 0.04f);
-	
+	_pPlayer->velocity =  _pPlayer->velocity  - (_pPlayer->Gravity  * 0.04f);	
 }
 
 

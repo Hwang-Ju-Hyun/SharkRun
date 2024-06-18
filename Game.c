@@ -9,11 +9,13 @@ struct Player player;
 
 void game_init(void)
 {
-	white = CP_Color_Create(255, 255, 255, 255);
+	white = CP_Color_Create(255, 255, 255, 255);	
 
+	//플레이어 초기로드
 	Player_Load("player.dat", &player);
-	Platform_Load("tile.dat", &platforms);
-
+	//플랫폼 초기로드
+	Platform_Load("tile.dat", &platforms);	
+	//점프 구현 초기 세팅
 	SetJump(&player, 30.f/*속도*/, 70.f/*중력*/, 0.f);
 	for (int i = 0; i < platforms.total; i++)
 	{
@@ -40,12 +42,6 @@ void game_update(void)
 	CP_Settings_TextSize(50.0f);
 	CP_Font_DrawText("Game", WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
 
-
-	if (CP_Input_MouseTriggered(MOUSE_BUTTON_RIGHT))
-	{
-		CP_Engine_SetNextGameState(main_init, main_update, main_exit);
-	}
-
 	time = CP_System_GetDt();
 	
 	if(CP_Input_KeyDown(KEY_SPACE))//점프
@@ -64,19 +60,22 @@ void game_update(void)
 		float left = -150.f * time;
 		CP_Vector c_lt = { player.Pos.x + left,player.Pos.y + 0.f };
 		SetPos(&player, c_lt);		
-	}
+	}	
 	if (player.JumpKeyPressed == true)
 	{
 		Jump(&player);
 		CP_Vector pos = { player.Pos.x,player.Pos.y + player.JumHeight };
 		SetPos(&player, pos);
 	}		
+	
 
 	for (int i = 0; i < platforms.total; i++)
 		Draw_Platform(&platforms.platform[i]);
 
 	SharkDraw(&shark);
 	SharkMove(&shark, time);
+	//메인메뉴로 진입
+	if (CP_Input_MouseTriggered(MOUSE_BUTTON_RIGHT)){CP_Engine_SetNextGameState(main_init, main_update, main_exit);}	
 
 	if (CP_Input_KeyTriggered(KEY_1))
 		SharkSpeedUp(&shark, 30.0f);
