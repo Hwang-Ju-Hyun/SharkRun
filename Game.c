@@ -7,6 +7,18 @@ struct Platforms platforms;
 struct Shark shark;
 struct Player player;
 
+void GravityUpdate()
+{
+	for (int i = 0; i < platforms.total; i++)
+	{
+		bool Col = IsCollision(&player, &platforms.platform[i]);
+		if (Col == true)
+			player.IsGrounded = GROUND;
+		else
+			player.IsGrounded = AIR;
+	}	
+}
+
 void game_init(void)
 {
 	white = CP_Color_Create(255, 255, 255, 255);	
@@ -40,8 +52,10 @@ void game_update(void)
 	CP_Settings_TextSize(50.0f);
 	CP_Font_DrawText("Game", WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
 
+
 	if (CP_Input_MouseTriggered(MOUSE_BUTTON_RIGHT))
 		CP_Engine_SetNextGameState(main_init, main_update, main_exit);
+
 
 	for (int i = 0; i < platforms.total; i++)
 		Draw_Platform(&platforms.platform[i]);

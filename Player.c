@@ -211,16 +211,35 @@ void SetJump(struct Player* _pPlayer, float _vel, float _gra, float _jumpHeight)
 
 void Jump(struct Player* _pPlayer)
 {					
-	if (_pPlayer->velocity <= -60.f)
-	{
-		_pPlayer->Pos.y -= (_pPlayer->velocity * 0.04f);
-		_pPlayer->velocity = 30.f;
-		_pPlayer->JumpKeyPressed = false;
-		_pPlayer->JumHeight = 0.f;
+	if (_pPlayer->JumpKeyPressed == false&&_pPlayer->IsGrounded==GROUND)
+	{		
 		return;
 	}
-	_pPlayer->JumHeight = _pPlayer->JumHeight - (_pPlayer->velocity * 0.04f);
-	_pPlayer->velocity =  _pPlayer->velocity  - (_pPlayer->Gravity  * 0.04f);	
+	else if (_pPlayer->JumpKeyPressed == false&&_pPlayer->IsGrounded == AIR)
+	{
+		_pPlayer->JumHeight = _pPlayer->JumHeight - (_pPlayer->velocity * 0.04f);
+		_pPlayer->velocity = _pPlayer->velocity - (_pPlayer->Gravity * 0.04f);
+		CP_Vector pos = { _pPlayer->Pos.x,_pPlayer->Pos.y + _pPlayer->JumHeight };
+		SetPos(_pPlayer, pos);
+	}
+	else
+	{
+		if (_pPlayer->velocity <= -60.f)
+		{
+			_pPlayer->Pos.y -= (_pPlayer->velocity * 0.04f);
+			_pPlayer->velocity = 30.f;
+			_pPlayer->JumpKeyPressed = false;
+			_pPlayer->JumHeight = 0.f;
+			CP_Vector pos = { _pPlayer->Pos.x,_pPlayer->Pos.y + _pPlayer->JumHeight };
+			SetPos(_pPlayer, pos);
+			return;
+		}
+		_pPlayer->JumHeight = _pPlayer->JumHeight - (_pPlayer->velocity * 0.04f);
+		_pPlayer->velocity = _pPlayer->velocity - (_pPlayer->Gravity * 0.04f);
+		CP_Vector pos = { _pPlayer->Pos.x,_pPlayer->Pos.y + _pPlayer->JumHeight };
+		SetPos(_pPlayer, pos);
+	}
+	
 }
 
 void PlayerBodyCollisionArea(struct Player* p)

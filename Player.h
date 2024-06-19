@@ -31,6 +31,7 @@ struct Player
 	struct Collision col;
 	struct Collision body;
 
+	enum GROUND_OR_AIR IsGrounded;
 	bool JumpKeyPressed;
 };
 
