@@ -7,7 +7,6 @@ void LoadTotalFromFile(int* n, FILE* _inFile)
 	char str[BUFFERSIZE] = { '\0' };
 	fgets(str, BUFFERSIZE, _inFile);
 	sscanf(str, "%d", n);
-	//getchar();
 }
 
 void LoadPosFromFile(CP_Vector* pos, FILE* _inFile)
@@ -31,12 +30,6 @@ void LoadGapFromFile(CP_Vector* g, FILE* _inFile)
 	sscanf(str, "%f %f", &g->x, &g->y);
 }
 
-void LoadTypeFromFile(enum pTYPE* pt, FILE* _inFile)
-{
-	char str[BUFFERSIZE] = { '\0' };
-	fgets(str, BUFFERSIZE, _inFile);
-	sscanf(str, "%d", pt);
-}
 void LoadColorFromFile(CP_Color* _col, FILE* _inFile)
 {
 	char str[BUFFERSIZE] = { '\0' };
@@ -48,7 +41,13 @@ void LoadColorFromFile(CP_Color* _col, FILE* _inFile)
 
 	for (int i = 0; i < 4; i++)
 		_col->rgba[i] = (char)c[i];
-	
+}
+
+void LoadTypeFromFile(enum PLATFORM_TYPE* pt, FILE* _inFile)
+{
+	char str[BUFFERSIZE] = { '\0' };
+	fgets(str, BUFFERSIZE, _inFile);
+	sscanf(str, "%d", pt);
 }
 
 void LoadPlatformFromFile(struct Platforms* p, FILE* _inFile)
@@ -80,22 +79,8 @@ void Platform_Load(char* fileName, struct Platforms* p)
 		return;
 	}
 
-	//char str[BUFFERSIZE] = { '\0' };
-
-	//MAP_LOAD
-#if 0
-	LoadTotalFromFile(&p->total, _inFile);
-	printf("total = %d\n", p->total);
-
-	LoadPosFromFile(&p->platform->Pos, _inFile);
-	LoadSizeFromFile(&p->platform->width, &p->platform->height, _inFile);
-	LoadGapFromFile(&p->platform->gap, _inFile);		
-	LoadColorFromFile(&p->platform->color, _inFile);
-	LoadTypeFromFile(&p->platform->type, _inFile);
-#elif 1
 	LoadPlatformFromFile(p, _inFile);
-#endif
-	
+
 	fclose(_inFile);
 }
 
@@ -104,5 +89,4 @@ void Draw_Platform(struct Platform* p)
 	CP_Settings_StrokeWeight(1.0f);
 	CP_Settings_Fill(p->color);
 	CP_Graphics_DrawRect(p->Pos.x, p->Pos.y, p->width, p->height);
-
 }
