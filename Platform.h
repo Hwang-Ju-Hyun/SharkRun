@@ -28,11 +28,11 @@ struct Platforms
 };
 
 
-	void LoadTotalFromFile(int* n, FILE* _inFile);
-	void LoadPosFromFile(CP_Vector* pos, FILE* _inFile);
-	void LoadSizeFromFile(float* w, float* h, FILE* _inFile);
-	void LoadGapFromFile(CP_Vector* g, FILE* _inFile);
-	void LoadColorFromFile(CP_Color* _col, FILE* _inFile);
+void LoadTotalFromFile(int* n, FILE* _inFile);
+void LoadPosFromFile(CP_Vector* pos, FILE* _inFile);
+void LoadSizeFromFile(float* w, float* h, FILE* _inFile);
+void LoadGapFromFile(CP_Vector* g, FILE* _inFile);
+void LoadColorFromFile(CP_Color* _col, FILE* _inFile);
 
 
 void LoadTypeFromFile(enum PLATFORM_TYPE* pt, FILE* _inFile);

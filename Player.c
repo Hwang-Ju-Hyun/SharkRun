@@ -42,18 +42,22 @@ void PlayerInit(struct Player* p)
 	p->res[0] = CP_Image_Load("Assets\\dog_left.png");
 	p->res[1] = CP_Image_Load("Assets\\dog_right.png");
 
-	p->Pos.x = 140.0f;
-	p->Pos.y = 600.0f - 30.0f;
+	p->Pos.x = 0.f;
+	p->Pos.y = 0.f;
 
 	p->width = (float)CP_Image_GetWidth(p->res[0]);
 	p->height = (float)CP_Image_GetHeight(p->res[0]);
 
-	p->velocity = 30.0f;
-	p->Gravity = 70.0f;
-	p->JumHeight = 0.0f;
-
+	p->velocity = 0.f;	
+	p->Acceleration = -500.f;
 	p->alpha = 255;
+	
+	p->foot_col.Pos.x =p->Pos.x;//p->Pos.x;
+	p->foot_col.Pos.y =p->Pos.y;//p->Pos.y+80.f;
 
+	p->foot_col.w = p->width;//p->width ;
+	p->foot_col.h = p->height;//p->height/3.f-20.f;
+	
 	p->d = RIGHT;
 	p->JumpKeyPressed = false;
 }
@@ -102,7 +106,7 @@ void PlayerMove(struct Player* p, float dt)
 		p->Pos.y += p->velocity * dt;
 	}
 
-	PlayerDraw(p);
+	//PlayerDraw(p);
 }
 
 void Draw_Player(struct Player* _pPlayer)
@@ -112,7 +116,7 @@ void Draw_Player(struct Player* _pPlayer)
 	if (_pPlayer->d == LEFT)
 		tmp = _pPlayer->res[0];
 	
-	CP_Image_Draw(tmp, _pPlayer->Pos.x, _pPlayer->Pos.y, _pPlayer->width, _pPlayer->height, _pPlayer->alpha);
+	CP_Image_Draw(tmp, _pPlayer->Pos.x + (_pPlayer->width / 2.0f), _pPlayer->Pos.y + (_pPlayer->height / 2.0f), _pPlayer->width, _pPlayer->height, _pPlayer->alpha);
 }
 
 void SetPos(struct Player* _pPlayer, CP_Vector _pVec)
@@ -148,6 +152,7 @@ void Move_Player(struct Player* _pPlayer, float dt)
 	if (CP_Input_KeyDown(KEY_SPACE))//มกวม
 	{
 		_pPlayer->JumpKeyPressed = true;
+		Jump(_pPlayer,250.0f);
 	}
 
 	if (CP_Input_KeyDown(KEY_D))
@@ -158,6 +163,9 @@ void Move_Player(struct Player* _pPlayer, float dt)
 		_pPlayer->Pos.x = _pPlayer->Pos.x + right;
 		_pPlayer->Pos.y = _pPlayer->Pos.y;
 
+		_pPlayer->foot_col.Pos.x = _pPlayer->foot_col.Pos.x + right;
+		_pPlayer->foot_col.Pos.y = _pPlayer->foot_col.Pos.y;
+
 		//SetPos(&player, c_rt);
 	}
 
@@ -167,17 +175,27 @@ void Move_Player(struct Player* _pPlayer, float dt)
 		float left = -150.f * dt;
 		_pPlayer->Pos.x = _pPlayer->Pos.x + left;
 		_pPlayer->Pos.y = _pPlayer->Pos.y;
-		//SetPos(&player, c_lt);
-	}
-
-	if (_pPlayer->JumpKeyPressed == true)
+		_pPlayer->foot_col.Pos.x = _pPlayer->foot_col.Pos.x + left;
+		_pPlayer->foot_col.Pos.y = _pPlayer->foot_col.Pos.y;		
+	}		
+	/*if (CP_Input_KeyDown(KEY_S))
 	{
-		Jump(_pPlayer);
-		_pPlayer->Pos.x = _pPlayer->Pos.x;
-		_pPlayer->Pos.y += _pPlayer->JumHeight;
-		//SetPos(_pPlayer, pos);
+		_pPlayer->d = LEFT;
+		float down = 150.f * dt;
+		_pPlayer->Pos.x = _pPlayer->Pos.x ;
+		_pPlayer->Pos.y = _pPlayer->Pos.y+down;
+		_pPlayer->foot_col.Pos.x = _pPlayer->foot_col.Pos.x ;
+		_pPlayer->foot_col.Pos.y = _pPlayer->foot_col.Pos.y + down;
 	}
-	Draw_Player(_pPlayer);
+	if (CP_Input_KeyDown(KEY_W))
+	{
+		_pPlayer->d = LEFT;
+		float up = -150.f * dt;
+		_pPlayer->Pos.x = _pPlayer->Pos.x ;
+		_pPlayer->Pos.y = _pPlayer->Pos.y + up;
+		_pPlayer->foot_col.Pos.x = _pPlayer->foot_col.Pos.x ;
+		_pPlayer->foot_col.Pos.y = _pPlayer->foot_col.Pos.y+up;
+	}*/
 }
 
 void SetJump(struct Player* _pPlayer, float _vel, float _gra, float _jumpHeight)
@@ -187,35 +205,32 @@ void SetJump(struct Player* _pPlayer, float _vel, float _gra, float _jumpHeight)
 	_pPlayer->JumHeight = _jumpHeight;
 }
 
-void Jump(struct Player* _pPlayer)
-{					
-	if (_pPlayer->JumpKeyPressed == false&&_pPlayer->IsGrounded==GROUND)
-	{		
-		return;
-	}
-	else if (_pPlayer->JumpKeyPressed == false&&_pPlayer->IsGrounded == AIR)
+void Jump(struct Player* _pPlayer,float jumpHeight)
+{	
+	if (_pPlayer->IsGrounded == GROUND)
 	{
-		_pPlayer->JumHeight = _pPlayer->JumHeight - (_pPlayer->velocity * 0.04f);
-		_pPlayer->velocity = _pPlayer->velocity - (_pPlayer->Gravity * 0.04f);
-		CP_Vector pos = { _pPlayer->Pos.x,_pPlayer->Pos.y + _pPlayer->JumHeight };
-		SetPos(_pPlayer, pos);
+		_pPlayer->velocity = -jumpHeight;
 	}
-	else
 	{
+		/*if (_pPlayer->JumpKeyPressed == false&&_pPlayer->IsGrounded==GROUND)
+			return;
+
 		if (_pPlayer->velocity <= -60.f)
 		{
 			_pPlayer->Pos.y -= (_pPlayer->velocity * 0.04f);
+			_pPlayer->foot_col.Pos.y-= (_pPlayer->velocity * 0.04f);
 			_pPlayer->velocity = 30.f;
 			_pPlayer->JumpKeyPressed = false;
 			_pPlayer->JumHeight = 0.f;
 			CP_Vector pos = { _pPlayer->Pos.x,_pPlayer->Pos.y + _pPlayer->JumHeight };
+			_pPlayer->foot_col.Pos.y += _pPlayer->JumHeight;
 			SetPos(_pPlayer, pos);
 			return;
 		}
 		_pPlayer->JumHeight = _pPlayer->JumHeight - (_pPlayer->velocity * 0.04f);
 		_pPlayer->velocity = _pPlayer->velocity - (_pPlayer->Gravity * 0.04f);
 		CP_Vector pos = { _pPlayer->Pos.x,_pPlayer->Pos.y + _pPlayer->JumHeight };
-		SetPos(_pPlayer, pos);
+		_pPlayer->foot_col.Pos.y += _pPlayer->JumHeight;
+		SetPos(_pPlayer, pos);*/
 	}
-	
 }
