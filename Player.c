@@ -2,6 +2,41 @@
 #include "Player.h"
 #include "Collision.h"
 
+/*
+void LoadVelocityFromFile(float* _vel, FILE* _inFile)
+{
+	char str[BUFFERSIZE] = { '\0' };
+	fgets(str, BUFFERSIZE, _inFile);
+	sscanf(str, "%f", _vel);
+}
+void Player_Load_fromFile(char* fileName, struct Player* p)
+{
+
+	FILE* _inFile = fopen(fileName, "rt");
+
+	if (_inFile == NULL)
+	{
+		printf("Error! Platform File is not exists : (function)Map_Load\n");
+		return;
+	}
+
+	//Player_LOAD			
+	//1. 플레이어 Position
+	LoadPosFromFile(&p->Pos, _inFile);
+
+	//3. 플레이어 사이즈
+	LoadSizeFromFile(&p->width, &p->height, _inFile);
+
+	//4. 플레이어 속도
+	LoadVelocityFromFile(&p->velocity, _inFile);
+
+	//5. 플레이어 색깔
+	LoadColorFromFile(&p->colors, _inFile);
+
+	fclose(_inFile);
+}
+*/
+
 void PlayerInit(struct Player* p)
 {
 	p->res[0] = CP_Image_Load("Assets\\dog_left.png");
@@ -13,10 +48,25 @@ void PlayerInit(struct Player* p)
 	p->width = (float)CP_Image_GetWidth(p->res[0]);
 	p->height = (float)CP_Image_GetHeight(p->res[0]);
 
-	p->velocity = 80.0f;
+	p->velocity = 30.0f;
+	p->Gravity = 70.0f;
+	p->JumHeight = 0.0f;
+
 	p->alpha = 255;
 
 	p->d = RIGHT;
+	p->JumpKeyPressed = false;
+}
+
+void SetPlayer(struct Player* p, CP_Vector pos, float w, float h, float grav, float v, float jump, int a)
+{
+	p->Pos = pos;
+	p->width = w;
+	p->height = h;
+	p->Gravity = grav;
+	p->velocity = v;
+	p->JumHeight = jump;
+	p->alpha = a;
 }
 
 void PlayerDraw(struct Player* p)
@@ -24,8 +74,6 @@ void PlayerDraw(struct Player* p)
 	CP_Image tmp = p->res[1];
 	if (p->d == LEFT)
 		tmp = p->res[0];
-
-	//else if (p->d == RIGHT) tmp = p->res[1];
 
 	CP_Image_Draw(tmp, p->Pos.x, p->Pos.y, p->width, p->height, p->alpha);
 }
@@ -57,52 +105,79 @@ void PlayerMove(struct Player* p, float dt)
 	PlayerDraw(p);
 }
 
-void SetPos(struct Player* _pPlayer, CP_Vector _pVec){_pPlayer->Pos = _pVec;}
-void SetWidth(struct Player* _pPlayer, float _w){_pPlayer->width = _w;}
-void SetHeight(struct Player* _pPlayer, float _h){_pPlayer->height = _h;}
-
-const CP_Vector GetPos(struct Player* _pPlayer)			{return _pPlayer->Pos;}
-const float GetHeight(struct Player* _pPlayer)			{return _pPlayer->height;}
-const float GetWidth(struct Player* _pPlayer)			{return _pPlayer->width; }
-
-void LoadVelocityFromFile(float* _vel, FILE* _inFile)
+void Draw_Player(struct Player* _pPlayer)
 {
-	char str[BUFFERSIZE] = { '\0' };
-	fgets(str, BUFFERSIZE, _inFile);
-	sscanf(str, "%f", _vel);
+	
+	CP_Image tmp = _pPlayer->res[1];
+	if (_pPlayer->d == LEFT)
+		tmp = _pPlayer->res[0];
+	
+	CP_Image_Draw(tmp, _pPlayer->Pos.x, _pPlayer->Pos.y, _pPlayer->width, _pPlayer->height, _pPlayer->alpha);
 }
 
-void Player_Load(char* fileName, struct Player* p)
+void SetPos(struct Player* _pPlayer, CP_Vector _pVec)
 {
+	_pPlayer->Pos = _pVec;
+}
 
-	FILE* _inFile = fopen(fileName, "rt");
+void SetWidth(struct Player* _pPlayer)
+{
+	_pPlayer->width = (float)CP_Image_GetWidth(_pPlayer->res[0]);
+}
 
-	if (_inFile == NULL)
+void SetHeight(struct Player* _pPlayer)
+{
+	_pPlayer->height = (float)CP_Image_GetHeight(_pPlayer->res[0]);
+}
+
+const CP_Vector GetPos(struct Player* _pPlayer)	
+{
+	return _pPlayer->Pos;
+}
+const float GetHeight(struct Player* _pPlayer)
+{
+	return _pPlayer->height;
+}
+const float GetWidth(struct Player* _pPlayer)
+{
+	return _pPlayer->width;
+}
+
+void Move_Player(struct Player* _pPlayer, float dt)
+{
+	if (CP_Input_KeyDown(KEY_SPACE))//점프
 	{
-		printf("Error! Platform File is not exists : (function)Map_Load\n");
-		return;
+		_pPlayer->JumpKeyPressed = true;
 	}
 
-	//char str[BUFFERSIZE] = { '\0' };
+	if (CP_Input_KeyDown(KEY_D))
+	{
+		_pPlayer->d = RIGHT;
 
-	//Player_LOAD			
-	//1. 플레이어 Position
-	LoadPosFromFile(&p->Pos, _inFile);
+		float right = 150.f * dt;
+		_pPlayer->Pos.x = _pPlayer->Pos.x + right;
+		_pPlayer->Pos.y = _pPlayer->Pos.y;
 
-	//3. 플레이어 사이즈
-	LoadSizeFromFile(&p->width, &p->height, _inFile);
+		//SetPos(&player, c_rt);
+	}
 
-	//4. 플레이어 속도
-	LoadVelocityFromFile(&p->velocity, _inFile);
+	if (CP_Input_KeyDown(KEY_A))
+	{
+		_pPlayer->d = LEFT;
+		float left = -150.f * dt;
+		_pPlayer->Pos.x = _pPlayer->Pos.x + left;
+		_pPlayer->Pos.y = _pPlayer->Pos.y;
+		//SetPos(&player, c_lt);
+	}
 
-	//5. 플레이어 색깔
-	LoadColorFromFile(&p->colors, _inFile);
-	
-}
-
-void JumpKeyPressed(struct Player* _pPlayer)
-{
-	_pPlayer->JumpKeyPressed = true;
+	if (_pPlayer->JumpKeyPressed == true)
+	{
+		Jump(_pPlayer);
+		_pPlayer->Pos.x = _pPlayer->Pos.x;
+		_pPlayer->Pos.y += _pPlayer->JumHeight;
+		//SetPos(_pPlayer, pos);
+	}
+	Draw_Player(_pPlayer);
 }
 
 void SetJump(struct Player* _pPlayer, float _vel, float _gra, float _jumpHeight)
@@ -143,11 +218,4 @@ void Jump(struct Player* _pPlayer)
 		SetPos(_pPlayer, pos);
 	}
 	
-}
-
-
-void Draw_Player(struct Player* _pPlayer)
-{
-	CP_Settings_Fill(_pPlayer->colors);
-	CP_Graphics_DrawRect(_pPlayer->Pos.x,_pPlayer->Pos.y,_pPlayer->width,_pPlayer->height);
 }
