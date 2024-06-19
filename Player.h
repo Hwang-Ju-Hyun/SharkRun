@@ -29,6 +29,7 @@ struct Player
 	CP_Color colors;
 
 	struct Collision col;
+	struct Collision body;
 
 	bool JumpKeyPressed;
 };
@@ -52,3 +53,5 @@ const float GetWidth(struct Player* _pPlayer);			//Player Height¸¦ °¡Á®¿È
 void Move_Player(struct Player* _pPlayer, float dt);
 void SetJump(struct Player* _pPlayer,float _vel,float _gra,float _jumpHeight);
 void Jump(struct Player* _pPlayer);
+
+void PlayerBodyCollisionArea(struct Player* p);

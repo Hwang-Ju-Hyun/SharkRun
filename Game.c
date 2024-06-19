@@ -11,7 +11,6 @@ void game_init(void)
 {
 	white = CP_Color_Create(255, 255, 255, 255);	
 
-
 	//Player_Load_fromFile("player.dat", &player);
 	//player.res[0] = CP_Image_Load("Assets\\dog_left.png");
 	//player.res[1] = CP_Image_Load("Assets\\dog_right.png");
@@ -55,6 +54,26 @@ void game_update(void)
 
 	time = CP_System_GetDt();
 	Move_Player(&player, time);
+	Draw_Player(&player);
+
+	if (sharkCollision(&player, &shark)) //Game over
+	{
+		if (!CP_Input_KeyTriggered(KEY_0))
+		{
+			time = 0.0;
+			CP_Settings_Fill(CP_Color_Create(100, 180, 250, 255));
+			CP_Settings_Stroke(CP_Color_Create(0, 0, 0, 255));
+			CP_Graphics_DrawRect((WINDOW_WIDTH / 2) - 200, (WINDOW_HEIGHT / 2) - 150, 400, 300);
+
+			CP_Settings_Fill(CP_Color_Create(0, 0, 00, 255));
+			CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
+			CP_Settings_TextSize(50.0f);
+			CP_Font_DrawText("Game Over!", WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
+
+			CP_Settings_NoStroke();
+		}
+	}
+
 }
 
 void game_exit(void)

@@ -56,6 +56,8 @@ void PlayerInit(struct Player* p)
 
 	p->d = RIGHT;
 	p->JumpKeyPressed = false;
+	
+	PlayerBodyCollisionArea(p);
 }
 
 void SetPlayer(struct Player* p, CP_Vector pos, float w, float h, float grav, float v, float jump, int a)
@@ -71,6 +73,12 @@ void SetPlayer(struct Player* p, CP_Vector pos, float w, float h, float grav, fl
 
 void PlayerDraw(struct Player* p)
 {
+	//collision area draw
+	CP_Settings_Fill(CP_Color_Create(255, 0, 0, 150));
+	CP_Graphics_DrawRect(p->body.Pos.x, p->body.Pos.y, p->body.w, p->body.h);
+
+	CP_Settings_Fill(CP_Color_Create(255, 255, 255, 255));
+
 	CP_Image tmp = p->res[1];
 	if (p->d == LEFT)
 		tmp = p->res[0];
@@ -107,12 +115,15 @@ void PlayerMove(struct Player* p, float dt)
 
 void Draw_Player(struct Player* _pPlayer)
 {
-	
+
+	CP_Settings_Fill(CP_Color_Create(255, 0, 0, 150));
+	CP_Graphics_DrawRect(_pPlayer->body.Pos.x, _pPlayer->body.Pos.y, _pPlayer->body.w, _pPlayer->body.h);
+
 	CP_Image tmp = _pPlayer->res[1];
 	if (_pPlayer->d == LEFT)
 		tmp = _pPlayer->res[0];
 	
-	CP_Image_Draw(tmp, _pPlayer->Pos.x, _pPlayer->Pos.y, _pPlayer->width, _pPlayer->height, _pPlayer->alpha);
+	CP_Image_Draw(tmp, _pPlayer->Pos.x + (_pPlayer->width / 2.0f), _pPlayer->Pos.y + (_pPlayer->height / 2.0f), _pPlayer->width, _pPlayer->height, _pPlayer->alpha);
 }
 
 void SetPos(struct Player* _pPlayer, CP_Vector _pVec)
@@ -155,18 +166,26 @@ void Move_Player(struct Player* _pPlayer, float dt)
 		_pPlayer->d = RIGHT;
 
 		float right = 150.f * dt;
+
 		_pPlayer->Pos.x = _pPlayer->Pos.x + right;
 		_pPlayer->Pos.y = _pPlayer->Pos.y;
 
+		_pPlayer->body.Pos.x = _pPlayer->body.Pos.x + right;
+		_pPlayer->body.Pos.y = _pPlayer->body.Pos.y;
 		//SetPos(&player, c_rt);
 	}
 
 	if (CP_Input_KeyDown(KEY_A))
 	{
 		_pPlayer->d = LEFT;
+
 		float left = -150.f * dt;
+
 		_pPlayer->Pos.x = _pPlayer->Pos.x + left;
 		_pPlayer->Pos.y = _pPlayer->Pos.y;
+
+		_pPlayer->body.Pos.x = _pPlayer->body.Pos.x + left;
+		_pPlayer->body.Pos.y = _pPlayer->body.Pos.y;
 		//SetPos(&player, c_lt);
 	}
 
@@ -175,9 +194,12 @@ void Move_Player(struct Player* _pPlayer, float dt)
 		Jump(_pPlayer);
 		_pPlayer->Pos.x = _pPlayer->Pos.x;
 		_pPlayer->Pos.y += _pPlayer->JumHeight;
+
+		_pPlayer->body.Pos.x = _pPlayer->body.Pos.x;
+		_pPlayer->body.Pos.y += _pPlayer->JumHeight;
 		//SetPos(_pPlayer, pos);
 	}
-	Draw_Player(_pPlayer);
+	//Draw_Player(_pPlayer);
 }
 
 void SetJump(struct Player* _pPlayer, float _vel, float _gra, float _jumpHeight)
@@ -199,4 +221,12 @@ void Jump(struct Player* _pPlayer)
 	}
 	_pPlayer->JumHeight = _pPlayer->JumHeight - (_pPlayer->velocity * 0.04f);
 	_pPlayer->velocity =  _pPlayer->velocity  - (_pPlayer->Gravity  * 0.04f);	
+}
+
+void PlayerBodyCollisionArea(struct Player* p)
+{
+	p->body.Pos.x = p->Pos.x;
+	p->body.Pos.y = p->Pos.y;
+	p->body.w = p->width;
+	p->body.h = p->height;
 }
