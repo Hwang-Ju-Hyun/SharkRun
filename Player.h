@@ -28,7 +28,9 @@ struct Player
 	
 	CP_Color colors;
 
-	struct Collision foot_col;
+	struct Collision foot_col;	
+	struct Collision body;
+
 	enum GROUND_OR_AIR IsGrounded;
 	bool JumpKeyPressed;
 };
@@ -51,4 +53,8 @@ const float GetWidth(struct Player* _pPlayer);			//Player Height¸¦ °¡Á®¿È
 
 void Move_Player(struct Player* _pPlayer, float dt);
 void SetJump(struct Player* _pPlayer,float _vel,float _gra,float _jumpHeight);
+
 void Jump(struct Player* _pPlayer, float jumpHeight);
+
+
+void PlayerBodyCollisionArea(struct Player* p);

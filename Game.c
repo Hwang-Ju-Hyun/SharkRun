@@ -45,6 +45,7 @@ void PlayerGravity(struct Player* _pPlayer,int _platformNum,bool IsCol)
 		}
 		_pPlayer->Pos.y = _pPlayer->Pos.y + _pPlayer->velocity * t;
 		_pPlayer->foot_col.Pos.y += _pPlayer->velocity * t;
+		_pPlayer->body.Pos.y += _pPlayer->velocity * t;
 		return;
 	}
 	_pPlayer->velocity = _pPlayer->velocity - _pPlayer->Acceleration * t;
@@ -52,22 +53,16 @@ void PlayerGravity(struct Player* _pPlayer,int _platformNum,bool IsCol)
 	
 	_pPlayer->Pos.y = _pPlayer->Pos.y + _pPlayer->velocity * t;
 	_pPlayer->foot_col.Pos.y += _pPlayer->velocity * t;
+	_pPlayer->body.Pos.y += _pPlayer->velocity * t;
 	return;
 }
 
 void game_init(void)
 {
 	white = CP_Color_Create(255, 255, 255, 255);	
-	//Player_Load_fromFile("player.dat", &player);
-	//player.res[0] = CP_Image_Load("Assets\\dog_left.png");
-	//player.res[1] = CP_Image_Load("Assets\\dog_right.png");
-	//player.alpha = 255;
 
 	//플레이어 초기로드
 	PlayerInit(&player);
-	//점프 구현 초기 세팅
-	//SetJump(&player, 30.f/*속도*/, 70.f/*중력*/, 0.f);
-	//플레이어 충돌체 세팅
 	
 	//플랫폼 초기로드
 	Platform_Load("tile.dat", &platforms);	
@@ -113,8 +108,6 @@ void game_update(void)
 	time = CP_System_GetDt();
 	Move_Player(&player, time);
 
-
-
 	//↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 	//↓↓↓↓↓↓절대 지우지 말것↓↓↓↓↓
 	//↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
@@ -131,8 +124,6 @@ void game_update(void)
 	//↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 	//↑↑↑↑↑절대 지우지 말것↑↑↑↑↑↑
 	//↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
-	
-	//물론 다른것도 지우지 말것!!!!!!!!!!!!!!!!!
 
 
 	//PlayerMove(&player, time);	
@@ -142,7 +133,27 @@ void game_update(void)
 	//=============
 	Draw_Player(&player);	
 	Draw_PlayerCollision(&player);	
-	drp(&player);
+	//drp(&player);
+
+	
+
+	if (sharkCollision(&player, &shark)) //Game over
+	{
+		if (!CP_Input_KeyTriggered(KEY_0))
+		{
+			time = 0.0;
+			CP_Settings_Fill(CP_Color_Create(100, 180, 250, 255));
+			CP_Settings_Stroke(CP_Color_Create(0, 0, 0, 255));
+			CP_Graphics_DrawRect((WINDOW_WIDTH / 2) - 200, (WINDOW_HEIGHT / 2) - 150, 400, 300);
+
+			CP_Settings_Fill(CP_Color_Create(0, 0, 00, 255));
+			CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
+			CP_Settings_TextSize(50.0f);
+			CP_Font_DrawText("Game Over!", WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
+
+			CP_Settings_NoStroke();
+		}
+	}
 }
 
 void game_exit(void)

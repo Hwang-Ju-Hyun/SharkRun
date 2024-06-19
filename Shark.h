@@ -1,5 +1,6 @@
 #pragma once
 #include "Header.h"
+#include "Collision.h"
 
 struct Shark
 {	
@@ -9,6 +10,8 @@ struct Shark
 	float height;
 	float speed;
 	int alpha;
+
+	struct Collision col;
 };
 
 void SharkInit(struct Shark* s);
@@ -16,3 +19,5 @@ void SharkDraw(struct Shark* s);
 void SharkMove(struct Shark* s, float dt);
 void SharkSpeedUp(struct Shark* s, float v);
 void SharkFree(struct Shark* s);
+
+void SharkCollisionArea(struct Shark* s);

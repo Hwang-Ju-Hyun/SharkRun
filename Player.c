@@ -60,6 +60,8 @@ void PlayerInit(struct Player* p)
 	
 	p->d = RIGHT;
 	p->JumpKeyPressed = false;
+	
+	PlayerBodyCollisionArea(p);
 }
 
 void SetPlayer(struct Player* p, CP_Vector pos, float w, float h, float grav, float v, float jump, int a)
@@ -75,6 +77,12 @@ void SetPlayer(struct Player* p, CP_Vector pos, float w, float h, float grav, fl
 
 void PlayerDraw(struct Player* p)
 {
+	//collision area draw
+	CP_Settings_Fill(CP_Color_Create(255, 0, 0, 150));
+	CP_Graphics_DrawRect(p->body.Pos.x, p->body.Pos.y, p->body.w, p->body.h);
+
+	CP_Settings_Fill(CP_Color_Create(255, 255, 255, 255));
+
 	CP_Image tmp = p->res[1];
 	if (p->d == LEFT)
 		tmp = p->res[0];
@@ -111,7 +119,10 @@ void PlayerMove(struct Player* p, float dt)
 
 void Draw_Player(struct Player* _pPlayer)
 {
-	
+
+	CP_Settings_Fill(CP_Color_Create(255, 0, 0, 150));
+	CP_Graphics_DrawRect(_pPlayer->body.Pos.x, _pPlayer->body.Pos.y, _pPlayer->body.w, _pPlayer->body.h);
+
 	CP_Image tmp = _pPlayer->res[1];
 	if (_pPlayer->d == LEFT)
 		tmp = _pPlayer->res[0];
@@ -160,11 +171,15 @@ void Move_Player(struct Player* _pPlayer, float dt)
 		_pPlayer->d = RIGHT;
 
 		float right = 150.f * dt;
+
 		_pPlayer->Pos.x = _pPlayer->Pos.x + right;
 		_pPlayer->Pos.y = _pPlayer->Pos.y;
 
 		_pPlayer->foot_col.Pos.x = _pPlayer->foot_col.Pos.x + right;
 		_pPlayer->foot_col.Pos.y = _pPlayer->foot_col.Pos.y;
+
+		_pPlayer->body.Pos.x = _pPlayer->body.Pos.x + right;
+		_pPlayer->body.Pos.y = _pPlayer->body.Pos.y;
 
 		//SetPos(&player, c_rt);
 	}
@@ -172,30 +187,18 @@ void Move_Player(struct Player* _pPlayer, float dt)
 	if (CP_Input_KeyDown(KEY_A))
 	{
 		_pPlayer->d = LEFT;
+
 		float left = -150.f * dt;
+
 		_pPlayer->Pos.x = _pPlayer->Pos.x + left;
 		_pPlayer->Pos.y = _pPlayer->Pos.y;
+
 		_pPlayer->foot_col.Pos.x = _pPlayer->foot_col.Pos.x + left;
-		_pPlayer->foot_col.Pos.y = _pPlayer->foot_col.Pos.y;		
-	}		
-	/*if (CP_Input_KeyDown(KEY_S))
-	{
-		_pPlayer->d = LEFT;
-		float down = 150.f * dt;
-		_pPlayer->Pos.x = _pPlayer->Pos.x ;
-		_pPlayer->Pos.y = _pPlayer->Pos.y+down;
-		_pPlayer->foot_col.Pos.x = _pPlayer->foot_col.Pos.x ;
-		_pPlayer->foot_col.Pos.y = _pPlayer->foot_col.Pos.y + down;
+		_pPlayer->foot_col.Pos.y = _pPlayer->foot_col.Pos.y;			
+		_pPlayer->body.Pos.x = _pPlayer->body.Pos.x + left;
+		_pPlayer->body.Pos.y = _pPlayer->body.Pos.y;
+		//SetPos(&player, c_lt);
 	}
-	if (CP_Input_KeyDown(KEY_W))
-	{
-		_pPlayer->d = LEFT;
-		float up = -150.f * dt;
-		_pPlayer->Pos.x = _pPlayer->Pos.x ;
-		_pPlayer->Pos.y = _pPlayer->Pos.y + up;
-		_pPlayer->foot_col.Pos.x = _pPlayer->foot_col.Pos.x ;
-		_pPlayer->foot_col.Pos.y = _pPlayer->foot_col.Pos.y+up;
-	}*/
 }
 
 void SetJump(struct Player* _pPlayer, float _vel, float _gra, float _jumpHeight)
@@ -211,26 +214,12 @@ void Jump(struct Player* _pPlayer,float jumpHeight)
 	{
 		_pPlayer->velocity = -jumpHeight;
 	}
-	{
-		/*if (_pPlayer->JumpKeyPressed == false&&_pPlayer->IsGrounded==GROUND)
-			return;
+}
 
-		if (_pPlayer->velocity <= -60.f)
-		{
-			_pPlayer->Pos.y -= (_pPlayer->velocity * 0.04f);
-			_pPlayer->foot_col.Pos.y-= (_pPlayer->velocity * 0.04f);
-			_pPlayer->velocity = 30.f;
-			_pPlayer->JumpKeyPressed = false;
-			_pPlayer->JumHeight = 0.f;
-			CP_Vector pos = { _pPlayer->Pos.x,_pPlayer->Pos.y + _pPlayer->JumHeight };
-			_pPlayer->foot_col.Pos.y += _pPlayer->JumHeight;
-			SetPos(_pPlayer, pos);
-			return;
-		}
-		_pPlayer->JumHeight = _pPlayer->JumHeight - (_pPlayer->velocity * 0.04f);
-		_pPlayer->velocity = _pPlayer->velocity - (_pPlayer->Gravity * 0.04f);
-		CP_Vector pos = { _pPlayer->Pos.x,_pPlayer->Pos.y + _pPlayer->JumHeight };
-		_pPlayer->foot_col.Pos.y += _pPlayer->JumHeight;
-		SetPos(_pPlayer, pos);*/
-	}
+void PlayerBodyCollisionArea(struct Player* p)
+{
+	p->body.Pos.x = p->Pos.x;
+	p->body.Pos.y = p->Pos.y;
+	p->body.w = p->width;
+	p->body.h = p->height;
 }

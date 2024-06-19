@@ -3,6 +3,7 @@
 
 struct Player;
 struct Platform;
+struct Shark;
 
 struct Collision
 {
@@ -20,5 +21,7 @@ void Draw_PlayerCollision(struct Player* p);
 //Player와 Platform간의 충돌체크
 bool IsCollision(struct Player* _pPlayer, struct Platform* _pPlatform);
 
+
 //Player와 Shark간의 충돌 체크
 //bool IsCollision(struct Player* _pPlayer, struct Shark* _pPlatform);
+bool sharkCollision(struct Player* p, struct Shark* s);

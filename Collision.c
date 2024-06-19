@@ -27,3 +27,20 @@ bool IsCollision(struct Player* _pPlayer, struct Platform* _pPlatform)
 	}
 	return true;
 }
+
+bool sharkCollision(struct Player* p, struct Shark* s)
+{
+	float sLeftX = s->col.Pos.x,
+		 sRightX = s->col.Pos.x + s->col.w,
+		   sTopY = s->col.Pos.y,
+		   sBotY = s->col.Pos.y + s->col.h;
+
+	float pLeftX = p->body.Pos.x,
+		 pRightX = p->body.Pos.x + p->body.w,
+		   pTopY = p->body.Pos.y,
+		   pBotY = p->body.Pos.y + p->body.h;
+
+	if (sRightX < pLeftX || sLeftX > pRightX || sBotY < pTopY || sTopY > pBotY)
+		return false;
+	return true;
+}
