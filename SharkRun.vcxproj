@@ -197,6 +197,7 @@ xcopy "$(ProjectDir)Assets\*" "$(OutDir)Assets\" /s /r /y /q</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.c" />
     <ClCompile Include="Collision.c" />
     <ClCompile Include="Game.c" />
     <ClCompile Include="main.c" />
@@ -205,6 +206,7 @@ xcopy "$(ProjectDir)Assets\*" "$(OutDir)Assets\" /s /r /y /q</Command>
     <ClCompile Include="Shark.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Header.h" />

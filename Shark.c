@@ -22,15 +22,23 @@ void SharkInit(struct Shark* s)
 	SharkCollisionArea(s);
 }
 
-void SharkDraw(struct Shark* s)
+void SharkDraw(struct Shark* s,struct Camera* c)
 {
 	//collision area draw
 	CP_Settings_Fill(CP_Color_Create(255, 0, 0, 150));
-	CP_Graphics_DrawRect(s->col.Pos.x, s->col.Pos.y, s->col.w, s->col.h);
+	CP_Vector Render;	
+	Render.x = GetRenderSharkColPos(s, c).x;
+	Render.y = GetRenderSharkColPos(s, c).y;
+	CP_Graphics_DrawRect(Render.x, Render.y, s->col.w, s->col.h);
 
 	//shark
 	CP_Settings_Fill(CP_Color_Create(255, 255, 255, 255));
-	CP_Image_Draw(s->res, s->Pos.x + (s->width / 2.0f), s->Pos.y + (s->height / 2.0f), s->width, s->height, s->alpha);
+	CP_Vector sRender;
+	sRender.x = GetRenderSharkPos(s, c).x;
+	sRender.y = GetRenderSharkPos(s, c).y;	
+	sRender.x += (s->width / 2.0f);
+	sRender.y += (s->height / 2.0f);
+	CP_Image_Draw(s->res, sRender.x, sRender.y, s->width, s->height, s->alpha);
 }
 
 void SharkMove(struct Shark* s, float dt)

@@ -9,6 +9,7 @@
 #include "Player.h"
 #include "Platform.h"
 #include "Shark.h"
+#include "Camera.h"
 
 
 void game_init(void);

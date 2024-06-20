@@ -1,6 +1,6 @@
 #include "Platform.h"
 #include "Header.h"
-
+#include "Camera.h"
 
 void LoadTotalFromFile(int* n, FILE* _inFile)
 {
@@ -84,9 +84,12 @@ void Platform_Load(char* fileName, struct Platforms* p)
 	fclose(_inFile);
 }
 
-void Draw_Platform(struct Platform* p)
+void Draw_Platform(struct Platform* p, struct Camera* _c)
 {
+	CP_Vector Render;
+	Render.x = GetRenderPlatPos(p,_c).x;
+	Render.y = GetRenderPlatPos(p,_c).y;
 	CP_Settings_StrokeWeight(1.0f);
-	CP_Settings_Fill(p->color);
-	CP_Graphics_DrawRect(p->Pos.x, p->Pos.y, p->width, p->height);
+	CP_Settings_Fill(p->color); 
+	CP_Graphics_DrawRect(Render.x, Render.y, p->width, p->height);
 }

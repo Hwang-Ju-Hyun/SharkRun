@@ -7,6 +7,8 @@
 
 #define MAXPLATFORM 30
 
+struct Camera;
+
 struct Platform
 {
 	CP_Vector		Pos;
@@ -38,4 +40,4 @@ void LoadTypeFromFile(enum PLATFORM_TYPE* pt, FILE* _inFile);
 void LoadPlatformFromFile(struct Platforms* p, FILE* _inFile);
 void Platform_Load(char* fileName, struct Platforms* p);
 
-void Draw_Platform(struct Platform* p);
+void Draw_Platform(struct Platform* p,struct Camera* _c);
