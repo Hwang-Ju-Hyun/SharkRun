@@ -24,7 +24,7 @@ struct Player
 	float velocity;
 	float Acceleration;
 	float JumHeight;
-	
+	float velocityX;
 	int alpha;
 	
 	enum direction d;

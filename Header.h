@@ -1,6 +1,7 @@
 #pragma once
 
 #pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console") //<- 콘솔 창 띄워서 디버깅 가능한 함수
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -12,6 +13,7 @@
 #include "Shark.h"
 #include "Game.h"
 #include "Collision.h"
+
 
 
 

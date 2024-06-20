@@ -51,7 +51,7 @@ void PlayerInit(struct Player* p)
 	p->velocity = 0.f;	
 	p->Acceleration = -500.f;
 	p->alpha = 255;
-	
+	p->velocityX = 0.f;
 	p->body.Pos.x =p->Pos.x;//p->Pos.x;
 	p->body.Pos.y =p->Pos.y;//p->Pos.y+80.f;
 
@@ -59,8 +59,7 @@ void PlayerInit(struct Player* p)
 	p->body.h = p->height;//p->height/3.f-20.f;
 	
 	p->d = RIGHT;
-	p->JumpKeyPressed = false;
-	p->goX = true;
+	p->JumpKeyPressed = false;	
 	PlayerBodyCollisionArea(p);
 }
 
@@ -138,37 +137,33 @@ void Move_Player(struct Player* _pPlayer,struct Platforms* _pPlatforms, float dt
 {
 	if (CP_Input_KeyDown(KEY_SPACE))//점프
 	{
-		_pPlayer->JumpKeyPressed = true;
-		Jump(_pPlayer,250.0f);
-	}
-
+		//이단점프 방지
+		if (_pPlayer->JumpKeyPressed == false)
+		{
+			_pPlayer->JumpKeyPressed = true;
+			Jump(_pPlayer, 450.0f);
+		}		
+	}	
+	// 좌우 이동 처리
 	if (CP_Input_KeyDown(KEY_D))
 	{
 		_pPlayer->d = RIGHT;
-
-		float right = 150.f * dt;				
-		
-		_pPlayer->Pos.x = _pPlayer->Pos.x + right;
-		_pPlayer->Pos.y = _pPlayer->Pos.y;
-		
-		_pPlayer->body.Pos.x = _pPlayer->body.Pos.x + right;
-		_pPlayer->body.Pos.y = _pPlayer->body.Pos.y;		
-
-		//SetPos(&player, c_rt);
+		float right = 350.f * dt;
+		_pPlayer->velocityX = right;
+		_pPlayer->Pos.x += right;
+		_pPlayer->body.Pos.x += right;
 	}
-
-	if (CP_Input_KeyDown(KEY_A))
+	else if (CP_Input_KeyDown(KEY_A))
 	{
 		_pPlayer->d = LEFT;
-
-		float left = -150.f * dt;
-	
-
-		_pPlayer->Pos.x = _pPlayer->Pos.x + left;
-		_pPlayer->Pos.y = _pPlayer->Pos.y;				
-		_pPlayer->body.Pos.x = _pPlayer->body.Pos.x + left;
-		_pPlayer->body.Pos.y = _pPlayer->body.Pos.y;
-		//SetPos(&player, c_lt);
+		float left = -350.f * dt;
+		_pPlayer->velocityX = left;
+		_pPlayer->Pos.x += left;
+		_pPlayer->body.Pos.x += left;
+	}
+	else
+	{
+		_pPlayer->velocityX = 0;
 	}
 }
 void SetJump(struct Player* _pPlayer, float _vel, float _gra, float _jumpHeight)
