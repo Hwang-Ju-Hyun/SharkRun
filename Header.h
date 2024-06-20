@@ -15,7 +15,7 @@
 
 
 
-#define WINDOW_WIDTH 1280
+#define WINDOW_WIDTH 2000
 #define WINDOW_HEIGHT 720
 
 
