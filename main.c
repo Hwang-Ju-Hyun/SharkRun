@@ -25,11 +25,12 @@ void main_update(void)
 
 void main_exit(void)
 {
+	//exit
 }
 
 int main(void)
 {
-	CP_System_SetWindowTitle("Shark Run!");
+	CP_System_SetWindowTitle("Shank Run!");
 	CP_System_SetWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 
 	CP_Engine_SetNextGameState(main_init, main_update, main_exit);

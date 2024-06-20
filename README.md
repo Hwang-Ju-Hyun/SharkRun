@@ -1,4 +1,1 @@
 # SharkRun
-ShangeoBob
-KimYujeong
-HwangJuHyun
