@@ -61,6 +61,5 @@ void SetJump(struct Player* _pPlayer,float _vel,float _gra,float _jumpHeight);
 
 void Jump(struct Player* _pPlayer, float jumpHeight);
 
-
 void PlayerBodyCollisionArea(struct Player* p);
 void PlayerGravity(struct Player* _pPlayer, int _platformNum, bool IsCol);

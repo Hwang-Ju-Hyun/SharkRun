@@ -42,7 +42,7 @@ void PlayerInit(struct Player* p)
 	p->res[0] = CP_Image_Load("Assets\\dog_left.png");
 	p->res[1] = CP_Image_Load("Assets\\dog_right.png");
 
-	p->Pos.x = 0.f;
+	p->Pos.x = 50.f;
 	p->Pos.y = 0.f;
 
 	p->width = (float)CP_Image_GetWidth(p->res[0]);

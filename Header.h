@@ -14,12 +14,8 @@
 #include "Game.h"
 #include "Collision.h"
 
-
-
-
 #define WINDOW_WIDTH 1280
 #define WINDOW_HEIGHT 720
-
 
 enum BUFFER_SIZE
 {
