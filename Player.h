@@ -28,15 +28,8 @@ struct Player
 	int alpha;
 	
 	enum direction d;
-	
-	CP_Color colors;
-
-	bool goX;
-
 	struct Collision body;
-	struct Collision forward;
-	struct Collision back;
-	struct Collision head;
+
 	enum GROUND_OR_AIR IsGrounded;
 	bool JumpKeyPressed;
 };

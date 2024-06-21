@@ -2,54 +2,19 @@
 #include "Player.h"
 #include "Collision.h"
 
-/*
-void LoadVelocityFromFile(float* _vel, FILE* _inFile)
-{
-	char str[BUFFERSIZE] = { '\0' };
-	fgets(str, BUFFERSIZE, _inFile);
-	sscanf(str, "%f", _vel);
-}
-void Player_Load_fromFile(char* fileName, struct Player* p)
-{
-
-	FILE* _inFile = fopen(fileName, "rt");
-
-	if (_inFile == NULL)
-	{
-		printf("Error! Platform File is not exists : (function)Map_Load\n");
-		return;
-	}
-
-	//Player_LOAD			
-	//1. 플레이어 Position
-	LoadPosFromFile(&p->Pos, _inFile);
-
-	//3. 플레이어 사이즈
-	LoadSizeFromFile(&p->width, &p->height, _inFile);
-
-	//4. 플레이어 속도
-	LoadVelocityFromFile(&p->velocity, _inFile);
-
-	//5. 플레이어 색깔
-	LoadColorFromFile(&p->colors, _inFile);
-
-	fclose(_inFile);
-}
-*/
-
 void PlayerInit(struct Player* p)
 {
 	p->res[0] = CP_Image_Load("Assets\\dog_left.png");
 	p->res[1] = CP_Image_Load("Assets\\dog_right.png");
 
-	p->Pos.x = 50.f;
+	p->Pos.x = 90.f;
 	p->Pos.y = 0.f;
 
 	p->width = (float)CP_Image_GetWidth(p->res[0]);
 	p->height = (float)CP_Image_GetHeight(p->res[0]);
 
 	p->velocity = 0.f;	
-	p->Acceleration = -500.f;
+	p->Acceleration = -900.f;
 	p->alpha = 255;
 	p->velocityX = 0.f;
 	p->body.Pos.x =p->Pos.x;//p->Pos.x;
@@ -74,10 +39,11 @@ void SetPlayer(struct Player* p, CP_Vector pos, float w, float h, float grav, fl
 	p->alpha = a;
 }
 
-void PlayerDraw(struct Player* p,struct Camera* c)
+void PlayerDraw(struct Player* p, struct Camera* c)
 {
 	//collision area draw
 	CP_Settings_Fill(CP_Color_Create(255, 0, 0, 150));
+	CP_Settings_StrokeWeight(0.5f);
 	CP_Graphics_DrawRect(p->body.Pos.x, p->body.Pos.y, p->body.w, p->body.h);
 
 	CP_Settings_Fill(CP_Color_Create(255, 255, 255, 255));
@@ -100,6 +66,7 @@ void Draw_Player(struct Player* _pPlayer, struct Camera* c)
 	CP_Image tmp = _pPlayer->res[1];
 	if (_pPlayer->d == LEFT)
 		tmp = _pPlayer->res[0];
+
 	CP_Vector Render;
 	Render.x = GetRenderPlayerColPos(_pPlayer, c).x;
 	Render.y = GetRenderPlayerColPos(_pPlayer, c).y;
@@ -184,5 +151,5 @@ void PlayerBodyCollisionArea(struct Player* p)
 	p->body.Pos.x = p->Pos.x;
 	p->body.Pos.y = p->Pos.y;
 	p->body.w = p->width;
-	p->body.h = p->height;
+	p->body.h = p->height - 4;
 }

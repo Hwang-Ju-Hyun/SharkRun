@@ -13,6 +13,7 @@ void Draw_PlayerCollision(struct Player* p, struct Camera* c)
 	CP_Vector Render;
 	Render.x = GetRenderPlayerColPos(p, c).x;
 	Render.y = GetRenderPlayerColPos(p, c).y;
+	CP_Settings_StrokeWeight(0.5f);
 	CP_Graphics_DrawRect(Render.x, Render.y, p->body.w, p->body.h);
 }
 
