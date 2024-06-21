@@ -41,8 +41,8 @@ void LoadColorFromFile(CP_Color* _col, FILE* _inFile);
 void LoadTypeFromFile(enum PLATFORM_TYPE* pt, FILE* _inFile);
 
 void InitPlatform(CP_Image* img);
-void LoadPlatformFromFile(struct Platforms* p, FILE* _inFile);
-void Platform_Load(char* fileName, struct Platforms* p);
+void LoadPlatformFromFile(struct Platforms* p);
+void Platform_Init(struct Platforms* p, CP_Image* img);
 
 void Draw_Platform(struct Platform* p, CP_Image* img);
 

@@ -61,7 +61,7 @@ void game_init(void)
 	
 	//ÇÃ·§Æû ÃÊ±â·Îµå
 	InitPlatform(tile);
-	Platform_Load("tile.dat", &platforms);	
+	Platform_Init(&platforms, tile);	
 		
 	SharkInit(&shark);
 
