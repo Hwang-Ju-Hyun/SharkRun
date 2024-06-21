@@ -61,7 +61,8 @@ void CameraUpdate(struct Camera* _pCamera, struct Player* _pPlayer)
 	if (CP_Input_KeyDown(KEY_LEFT))
 	{
 		_pCamera->cameraPos.x -= 500.f * deltaTime;
-	}
+	}	
+
 
 	CallDiff(_pCamera);
 }
