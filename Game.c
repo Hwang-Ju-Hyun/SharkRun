@@ -1,5 +1,5 @@
 #include "Game.h"
-
+#include "Collision.h"
 CP_Color white;
 
 CP_Image bgImg;
@@ -12,7 +12,7 @@ struct Camera camera;
 
 float time = 0;
 
-//플레이어 x축  충돌 처리(특히 대가리)
+//플레이어 x축  충돌 처리
 bool CheckXCollisionWithPlatform(struct Player* _pPlayer, struct Platform* platform)
 {
     if (_pPlayer->body.Pos.x < platform->Pos.x + platform->width &&
@@ -49,13 +49,12 @@ void PlayerGravity(struct Player* _pPlayer, int _platformNum, bool IsCol)
         // 플레이어의 상단이 플랫폼의 하단과 충돌한 경우
         else if (_pPlayer->body.Pos.y < platforms.platform[_platformNum].Pos.y + platforms.platform[_platformNum].height &&
             _pPlayer->body.Pos.y + _pPlayer->body.h > platforms.platform[_platformNum].Pos.y)
-        {
-         
+        {         
             _pPlayer->velocity = 0.f;
             _pPlayer->Pos.y = platforms.platform[_platformNum].Pos.y + platforms.platform[_platformNum].height;
             _pPlayer->body.Pos.y = _pPlayer->Pos.y;
             _pPlayer->IsGrounded = AIR;
-        }
+        }        
         else
         {
             _pPlayer->velocity = _pPlayer->velocity - _pPlayer->Acceleration * t;
@@ -131,14 +130,18 @@ void game_update(void)
             SharkSpeedUp(&shark, 30.0f);
     }
 
-	CP_Image_Draw(bgImg, (float)CP_Image_GetWidth(bgImg)/2, (float)CP_Image_GetHeight(bgImg)/2, (float)CP_Image_GetWidth(bgImg), (float)CP_Image_GetHeight(bgImg), 255);
+    //Render first
+    {
+        CP_Image_Draw(bgImg, (float)CP_Image_GetWidth(bgImg) / 2, (float)CP_Image_GetHeight(bgImg) / 2, (float)CP_Image_GetWidth(bgImg), (float)CP_Image_GetHeight(bgImg), 255);
 
-	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
-	CP_Settings_TextSize(50.0f);
-	CP_Font_DrawText("Game", WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
+        CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
+        CP_Settings_TextSize(50.0f);
+        CP_Font_DrawText("Game", WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
 
-	for (int i = 0; i < platforms.total; i++)
-		Draw_Platform(&platforms.platform[i], tile, &camera);
+        for (int i = 0; i < platforms.total; i++)
+            Draw_Platform(&platforms.platform[i], tile, &camera);
+    }
+	
 
     // Move    
     {
@@ -159,9 +162,9 @@ void game_update(void)
                 break;
             }
         }
-        PlayerGravity(&player, platformNum, col);
-
+        PlayerGravity(&player, platformNum, col);        
         // X축 충돌 감지
+        float dt = CP_System_GetDt();
         for (int i = 0; i < platforms.total; i++)
         {
             if (CheckXCollisionWithPlatform(&player, &platforms.platform[i]))
@@ -169,11 +172,13 @@ void game_update(void)
                 // 충돌 시 이동 제한
                 if (player.velocityX > 0) // 플레이어가 오른쪽으로 이동 중
                 {
-                    player.Pos.x = platforms.platform[i].Pos.x - player.body.w;
+                    player.Pos.x = player.Pos.x -=350.f*dt;
+                    printf("%d %6.3f %6.3f %6.3f %6.3f\n", i, player.Pos.x, player.Pos.y, platforms.platform[i].Pos.x, platforms.platform[i].Pos.y);
                 }
                 else if (player.velocityX < 0) // 플레이어가 왼쪽으로 이동 중
                 {
-                    player.Pos.x = platforms.platform[i].Pos.x + platforms.platform[i].width;
+                    player.Pos.x = player.Pos.x += 350.f * dt;
+                    printf("%d %f %6.3f %6.3f %6.3f %6.3f\n", i, platforms.platform[i].width, player.Pos.x, player.Pos.y, platforms.platform[i].Pos.x, platforms.platform[i].Pos.y);
                 }
                 player.velocityX = 0; // x축 속도 0으로 설정
                 player.body.Pos.x = player.Pos.x;
@@ -184,7 +189,7 @@ void game_update(void)
     // Camera_Update
     CameraUpdate(&camera, &player);
 
-    // Render
+    // Render second
     {
         CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
         CP_Settings_TextSize(50.0f);

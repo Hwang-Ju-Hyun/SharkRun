@@ -42,25 +42,22 @@ void PlayerInit(struct Player* p)
 	p->res[0] = CP_Image_Load("Assets\\dog_left.png");
 	p->res[1] = CP_Image_Load("Assets\\dog_right.png");
 
-	p->Pos.x = 50.f;
-	p->Pos.y = 0.f;
-
 	p->width = (float)CP_Image_GetWidth(p->res[0]);
 	p->height = (float)CP_Image_GetHeight(p->res[0]);
 
 	p->velocity = 0.f;	
-	p->Acceleration = -500.f;
+	p->Acceleration = -700.f;
 	p->alpha = 255;
 	p->velocityX = 0.f;
-	p->body.Pos.x =p->Pos.x;//p->Pos.x;
-	p->body.Pos.y =p->Pos.y;//p->Pos.y+80.f;
 
-	p->body.w = p->width;//p->width ;
-	p->body.h = p->height;//p->height/3.f-20.f;
+	p->body.Pos.x = 0;
+	p->body.Pos.y = 0;
+
+	p->body.w = p->width-10.f;
+	p->body.h =p->height-10.f;
 	
 	p->d = RIGHT;
-	p->JumpKeyPressed = false;	
-	PlayerBodyCollisionArea(p);
+	p->JumpKeyPressed = false;		
 }
 
 void SetPlayer(struct Player* p, CP_Vector pos, float w, float h, float grav, float v, float jump, int a)
@@ -78,7 +75,10 @@ void PlayerDraw(struct Player* p,struct Camera* c)
 {
 	//collision area draw
 	CP_Settings_Fill(CP_Color_Create(255, 0, 0, 150));
-	CP_Graphics_DrawRect(p->body.Pos.x, p->body.Pos.y, p->body.w, p->body.h);
+	CP_Vector Render;
+	Render.x = GetRenderPlayerPos(p, c).x;
+	Render.y = GetRenderPlayerPos(p, c).y;
+	CP_Graphics_DrawRect(Render.x, Render.y, p->body.w, p->body.h);
 
 	CP_Settings_Fill(CP_Color_Create(255, 255, 255, 255));
 
@@ -86,9 +86,7 @@ void PlayerDraw(struct Player* p,struct Camera* c)
 	if (p->d == LEFT)
 		tmp = p->res[0];
 
-	CP_Vector Render;
-	Render.x = GetRenderPlayerPos(p, c).x;
-	Render.y = GetRenderPlayerPos(p, c).y;
+	
 	CP_Image_Draw(tmp, Render.x, Render.y, p->width, p->height, p->alpha);
 }
 
@@ -135,7 +133,7 @@ const float GetWidth(struct Player* _pPlayer)
 
 void Move_Player(struct Player* _pPlayer,struct Platforms* _pPlatforms, float dt)
 {
-	if (CP_Input_KeyDown(KEY_SPACE))//점프
+	if(CP_Input_KeyTriggered(KEY_SPACE))//점프
 	{
 		//이단점프 방지
 		if (_pPlayer->JumpKeyPressed == false)

@@ -45,8 +45,8 @@ void Platform_Init(struct Platforms* p, CP_Image* img)
 		p->platform[i].height = ih;
 
 		///////////////////Collision Init Here//////////////////
-		p->platform[i].col.Pos.x = p->platform[i].Pos.x;
-		p->platform[i].col.Pos.y = p->platform[i].Pos.y;
+		p->platform[i].col.Pos.x = 0.f;
+		p->platform[i].col.Pos.y = 0.f;
 		p->platform[i].col.h = p->platform[i].height;
 		p->platform[i].col.w = p->platform[i].width;
 	}
@@ -71,19 +71,25 @@ void Draw_Platform(struct Platform* p, CP_Image* img,  struct Camera* _c)
 	w1 = (float)CP_Image_GetWidth(img[1]), h1 = (float)CP_Image_GetHeight(img[1]);
 	w2 = (float)CP_Image_GetWidth(img[2]), h2 = (float)CP_Image_GetHeight(img[2]);
 
-	//CP_Vector Render;
+	CP_Vector Render;
+	Render.x = GetRenderPlatPos(p, _c).x;
+	Render.y = GetRenderPlatPos(p, _c).y;
 
-	//Render.x = GetRenderPlatPos(p, _c).x;
-	//Render.y = GetRenderPlatPos(p, _c).y;
+	posX = Render.x, posY = Render.y;
 
-
-	posX = p->Pos.x, posY = p->Pos.y;
+	// collision area
+	CP_Settings_Fill(CP_Color_Create(255, 0, 0, 255));
+	CP_Graphics_DrawCircle(posX + p->width, posY, 10);
+	CP_Settings_StrokeWeight(1.0f);
+	CP_Settings_Fill(CP_Color_Create(255, 0, 0, 150));
+	CP_Graphics_DrawRect(posX, posY, p->width, p->height);
 
 	
 	for (int j = 0; j < 3; j++)
 	{
 		if (j == 0)
 		{
+			//CP_Graphics_DrawCircle(p->Pos.x+ p->Pos.x+ p->width)
 			CP_Image_Draw(img[0], posX + (w0/2), posY + (h0/2), w0, h0, 255);
 			posX = posX + w0;
 		}
@@ -97,7 +103,7 @@ void Draw_Platform(struct Platform* p, CP_Image* img,  struct Camera* _c)
 			}
 		}
 		else
-		{
+		{						
 			CP_Image_Draw(img[2], posX + (w2/2), posY + (h2/2), w2, h2, 255);
 		}
 	}
@@ -116,10 +122,7 @@ void Draw_Platform(struct Platform* p, CP_Image* img,  struct Camera* _c)
 		CP_Image_Draw(name, posX + 120, posY - (nh / 2) + 7, nw, nh, 255);
 	}
 
-	// collision area
-	CP_Settings_StrokeWeight(1.0f);
-	CP_Settings_Fill(CP_Color_Create(255, 0, 0, 150));
-	CP_Graphics_DrawRect(posX, posY, p->width, p->height);
+	
 }
 
 void FreeImg(CP_Image* img)

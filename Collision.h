@@ -26,3 +26,5 @@ bool IsCollisionXcord(struct Player* _pPlayer, struct Platform* _pPlatform);
 //Player와 Shark간의 충돌 체크
 //bool IsCollision(struct Player* _pPlayer, struct Shark* _pPlatform);
 bool sharkCollision(struct Player* p, struct Shark* s);
+
+CP_Vector GetColliderWorldPos(CP_Vector object_position, CP_Vector collider_position);

@@ -30,13 +30,9 @@ struct Player
 	enum direction d;
 	
 	CP_Color colors;
+	
 
-	bool goX;
-
-	struct Collision body;
-	struct Collision forward;
-	struct Collision back;
-	struct Collision head;
+	struct Collision body; // collision check	
 	enum GROUND_OR_AIR IsGrounded;
 	bool JumpKeyPressed;
 };
@@ -61,5 +57,4 @@ void SetJump(struct Player* _pPlayer,float _vel,float _gra,float _jumpHeight);
 
 void Jump(struct Player* _pPlayer, float jumpHeight);
 
-void PlayerBodyCollisionArea(struct Player* p);
 void PlayerGravity(struct Player* _pPlayer, int _platformNum, bool IsCol);

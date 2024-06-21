@@ -16,6 +16,14 @@ void Draw_PlayerCollision(struct Player* p, struct Camera* c)
 	CP_Graphics_DrawRect(Render.x, Render.y, p->body.w, p->body.h);
 }
 
+//CP_Vector GetColliderWorldPos(CP_Vector object_position, CP_Vector collider_position)
+//{
+//	CP_Vector result;
+//	result.x = object_position.x + collider_position.x;
+//	result.y = object_position.y + collider_position.y;
+//	return result;
+//}
+
 bool IsCollision(struct Player* _pPlayer, struct Platform* _pPlatform)
 {
 	if (_pPlayer->body.Pos.x + _pPlayer->body.w<_pPlatform->Pos.x

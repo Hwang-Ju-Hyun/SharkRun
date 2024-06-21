@@ -28,9 +28,8 @@ float sDt = 0;
 void SharkDraw(struct Shark* s, struct Camera* c)
 {
 	//collision area draw
-	//CP_Settings_Fill(CP_Color_Create(255, 0, 0, 150));
-	//CP_Graphics_DrawRect(s->col.Pos.x, s->col.Pos.y, s->col.w, s->col.h);
-
+	/*CP_Settings_Fill(CP_Color_Create(255, 0, 0, 150));
+	CP_Graphics_DrawRect(s->col.Pos.x, s->col.Pos.y, s->col.w, s->col.h);*/
 	CP_Settings_Fill(CP_Color_Create(255, 0, 0, 150));
 
 	CP_Vector Render;
