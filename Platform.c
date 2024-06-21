@@ -18,15 +18,16 @@ int LoadPlatformFromFile(struct Platforms* p)
 		return 0;
 	}
 
+	int RandNum = 0;
 	char str[BUFFERSIZE] = { '\0' };
 	fgets(str, BUFFERSIZE, _inFile); //read total
-	sscanf(str, "%d", &p->total);
+	sscanf(str, "%d %d", &p->total, &RandNum);
 
 	///////////////////////////////
 	AllocatePlatform(p, p->total);
-	InitPlatformsMemory(p);
+	InitPlatformsMemory(p, RandNum);
 
-	for (int j = 0; j < p->total; j++)
+	for (int j = 0; j < (p->total - RandNum); j++)
 	{
 		////////////////////////////
 		struct Platform* pf = GetFirstDeadPlatform(p);
@@ -34,8 +35,8 @@ int LoadPlatformFromFile(struct Platforms* p)
 		pf->alive = Alive;
 
 		fgets(str, BUFFERSIZE, _inFile);
-		sscanf(str, "%f %f %d %d %d", &p->pf[j].Pos.x, &p->pf[j].Pos.y,
-			&p->pf[j].tileSize, &p->pf[j].type, &p->pf[j].detail);
+		sscanf(str, "%f %f %d %d %d", &pf->Pos.x, &pf->Pos.y,
+			&pf->tileSize, &pf->type, &pf->detail);
 		//sscanf(str, "%f %f %d %d %d", &p->platform[j].Pos.x, &p->platform[j].Pos.y,
 		//	&p->platform[j].tileSize, &p->platform[j].type, &p->platform[j].detail);
 	}
@@ -177,7 +178,8 @@ void InitPlatform(struct Platforms* pfs, struct Platform* p, enum AliveOrDead a,
 	float w = dw + (CP_Image_GetWidth(img1) * p->tileSize);
 	p->width = w - 1;
 	p->height = ih;
-
+	p->lifeTime = (x / 128) + 10;
+	p->spanTime = 0;
 	///////////////////Collision Init Here//////////////////
 	p->col.Pos.x = p->Pos.x;
 	p->col.Pos.y = p->Pos.y;
@@ -191,6 +193,8 @@ void InitPlatformRandom(struct Platforms* pfs, struct Platform* p, enum AliveOrD
 
 	float x = CP_Random_RangeFloat(0, (float)WINDOW_WIDTH);
 	float y = CP_Random_RangeFloat(0, (float)WINDOW_HEIGHT);
+	//float lifeTime = x / 128;
+
 	int tileSize = (CP_Random_GetInt() % 3) + 1;
 	int type = 0;
 	int d = 0;
@@ -231,16 +235,14 @@ void KillPlatform(struct Platforms* pfs, struct Platform* p)
 	p->alive = Dead;
 }
 
-float dt = 0;
+//float dt = 0;
 void UpdatePlatform(struct Platforms* pfs, struct Platform* p)
 {
 	if (p == NULL) return;
-	dt = CP_System_GetSeconds();
-	if (((int)dt % 5) == 0)
-	{
+
+	p->spanTime += CP_System_GetDt();
+	if(p->lifeTime <= p->spanTime)
 		KillPlatform(pfs, p);
-		dt = 0;
-	}
 }
 
 void DrawPlatform(struct Platform* p, CP_Image* img, struct Camera* c)
@@ -300,13 +302,23 @@ void DrawPlatform(struct Platform* p, CP_Image* img, struct Camera* c)
 		CP_Image_Draw(name, posX - 20, posY - (nh / 2) + 7, nw, nh, 255);
 	}
 }
-void InitPlatformsMemory(struct Platforms* pfs)
+void InitPlatformsMemory(struct Platforms* pfs, int nr)
 {
 	if (pfs == NULL) return;
 
 	int i = 0;
+	int Alive = 0;
+
 	for (i = 0; i < pfs->total; i++)
-		InitPlatformRandom(pfs, &pfs->pf[i], Dead);
+	{
+		if (i < nr)
+			Alive = 1;
+		else
+			Alive = 0;
+
+		InitPlatformRandom(pfs, &pfs->pf[i], Alive);
+	}
+
 }
 
 void DeleteAllPlatforms(struct Platforms* pfs)

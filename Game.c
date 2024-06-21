@@ -300,7 +300,7 @@ void game_update(void)
 
         //for (int i = 0; i < platforms.total; i++)
         //    Draw_Platform(&platforms.platform[i], tile, &camera);
-        DrawAllPlatforms(mP, tile, &camera);
+        //DrawAllPlatforms(mP, tile, &camera);
 
         Draw_Player(&player, &camera);
         Draw_PlayerCollision(&player, &camera);

@@ -26,7 +26,8 @@ struct Platform
 	CP_Vector		Pos;
 	float			width;
 	float			height;
-	//float			lifeTime;
+	float			lifeTime;
+	float			spanTime;
 
 	int				tileSize;
 
@@ -63,7 +64,7 @@ void KillPlatform(struct Platforms* pfs, struct Platform* p);
 void UpdatePlatform(struct Platforms* pfs, struct Platform* p);
 void DrawPlatform(struct Platform* p, CP_Image* img, struct Camera* c);
 
-void InitPlatformsMemory(struct Platforms* pfs);
+void InitPlatformsMemory(struct Platforms* pfs, int nr);
 void DeleteAllPlatforms(struct Platforms* pfs);
 struct Platform* GetFirstDeadPlatform(struct Platforms* pfs);
 
