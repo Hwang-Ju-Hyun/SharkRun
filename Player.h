@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Game.h"
 #include "Header.h"
 #include "Collision.h"
@@ -28,12 +29,10 @@ struct Player
 	int alpha;
 	
 	enum direction d;
-	
-	CP_Color colors;
-	
+	struct Collision body;
 
-	struct Collision body; // collision check	
-	enum GROUND_OR_AIR IsGrounded;	
+	enum GROUND_OR_AIR IsGrounded;
+	bool JumpKeyPressed;
 };
 
 //void Player_Load_fromFile(char* fileName, struct Player* p);		//Player초기정보를 file에서 로드해온다

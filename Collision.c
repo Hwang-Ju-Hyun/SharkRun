@@ -13,6 +13,7 @@ void Draw_PlayerCollision(struct Player* p, struct Camera* c)
 	CP_Vector Render;
 	Render.x = GetRenderPlayerColPos(p, c).x;
 	Render.y = GetRenderPlayerColPos(p, c).y;
+	CP_Settings_StrokeWeight(0.5f);
 	CP_Graphics_DrawRect(Render.x, Render.y, p->body.w, p->body.h);
 }
 
@@ -39,7 +40,15 @@ bool IsCollision(struct Player* _pPlayer, struct Platform* _pPlatform)
 	return true;
 }
 
-
+bool IsCollisionXcord(struct Player* _pPlayer,struct Platform* _pPlatform)
+{
+	if (_pPlayer->body.Pos.x + _pPlayer->body.w<_pPlatform->Pos.x
+		|| _pPlayer->body.Pos.x>_pPlatform->Pos.x + _pPlatform->width)
+	{
+		return false;
+	}
+	return true;
+}
 
 bool sharkCollision(struct Player* p, struct Shark* s)
 {
@@ -55,5 +64,32 @@ bool sharkCollision(struct Player* p, struct Shark* s)
 
 	if (sRightX < pLeftX || sLeftX > pRightX || sBotY < pTopY || sTopY > pBotY)
 		return false;
+	return true;
+}
+
+bool platformCollision(struct Platform* p, float* x, float* y, float w, float h)
+{
+	float rightX = *x + w;
+	float botY = *y + h;
+	
+	float pRightX = p->Pos.x + p->width;
+	float pBotY = p->Pos.y + p->height;
+
+	bool lx = true, rx = true, ty = true, by = true;
+
+	if (pRightX < *x || rightX < p->Pos.x || pBotY < *y || p->Pos.y > botY)
+		return false;
+
+	if (pRightX >= rightX) rx = false;
+	if (*x >= p->Pos.x) lx = false;
+	if (pBotY >= botY) ty = false;
+	if (*y >= p->Pos.y) by = false;
+
+
+	if (!lx) *x = *x + (pRightX - *x);
+	if (!rx) *x = *x - (rightX - p->Pos.x);
+	if (!ty) *y = *y - (botY - p->Pos.y);
+	if (!by) *y = *y + (pBotY - *y);
+	
 	return true;
 }

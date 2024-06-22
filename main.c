@@ -1,6 +1,5 @@
 #include "main.h"
 
-
 CP_Color bgColor;
 
 void main_init(void)

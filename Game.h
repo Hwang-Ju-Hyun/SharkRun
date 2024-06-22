@@ -1,4 +1,5 @@
 #pragma once
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -11,6 +12,7 @@
 #include "Shark.h"
 #include "Camera.h"
 
+#include "Header.h"
 
 void game_init(void);
 void game_update(void);

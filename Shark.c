@@ -1,4 +1,3 @@
-#include "Game.h"
 #include "Shark.h"
 
 void SharkInit(struct Shark* s)
@@ -18,14 +17,14 @@ void SharkInit(struct Shark* s)
 	s->Pos.x = 0 - s->width + 10.0f;
 	s->Pos.y = WINDOW_HEIGHT / 2 - (s->height / 3.0f);
 
-	s->speed = 10.0f;
+	s->speed = 30.0f;
 	s->alpha = 255;
 
 	SharkCollisionArea(s);
 }
 
 float sDt = 0;
-void SharkDraw(struct Shark* s, struct Camera* c)
+void SharkDraw(struct Shark* s, struct Camera* c, struct Player* player)
 {
 	//collision area draw
 	/*CP_Settings_Fill(CP_Color_Create(255, 0, 0, 150));
@@ -34,27 +33,19 @@ void SharkDraw(struct Shark* s, struct Camera* c)
 
 	CP_Vector Render;
 	Render.x = GetRenderSharkColPos(s, c).x;
-	Render.y = GetRenderSharkColPos(s, c).y;
+	Render.y = GetRenderSharkColPos(s, c).y + (player->Pos.y / 2);
 	CP_Graphics_DrawRect(Render.x, Render.y, s->col.w, s->col.h);
-
-	CP_Vector sRender;
-	sRender.x = GetRenderSharkPos(s, c).x;
-	sRender.y = GetRenderSharkPos(s, c).y;
-	sRender.x += (s->width / 2.0f);
-	sRender.y += (s->height / 2.0f);
-	//CP_Image_Draw(s->res, sRender.x, sRender.y, s->width, s->height, s->alpha);
-
+	
 	sDt += CP_System_GetDt();
 	if (sDt >= s->animTime)
 	{
 		sDt = 0;
 		s->resIdx = (s->resIdx + 1) % 2; // shark resource 0, 1
 	}
-
 	CP_Image_Draw(s->res[s->resIdx], Render.x + (s->width / 2.0f), Render.y + (s->height / 2.0f), s->width, s->height, s->alpha);
 }
 
-void SharkMove(struct Shark* s, float dt)
+void SharkMove(struct Shark* s, float dt, struct Player* player)
 {
 	s->col.Pos.x = s->col.Pos.x + s->speed * dt;
 	s->Pos.x = s->Pos.x + s->speed * dt;
@@ -76,7 +67,7 @@ void SharkFree(struct Shark* s)
 void SharkCollisionArea(struct Shark* s)
 {
 	s->col.Pos.x = s->Pos.x;
-	s->col.Pos.y = 0;
+	s->col.Pos.y = s->Pos.y;
 	s->col.w = s->width - 20.0f;
-	s->col.h = WINDOW_HEIGHT;
+	s->col.h = s->Pos.y + 2000;
 }

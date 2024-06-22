@@ -48,7 +48,7 @@ void CameraUpdate(struct Camera* _pCamera, struct Player* _pPlayer)
 	//플레이어가 오른쪽으로 어느정도 이동한다면 
 	/*if (CP_Input_KeyDown(KEY_UP))
 	{
-		_pCamera->cameraPos.y -= 500.f*deltaTime;
+		_pCamera->cameraPos.y -= 500.f * deltaTime;
 	}
 	if (CP_Input_KeyDown(KEY_DOWN))
 	{
