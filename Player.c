@@ -50,11 +50,9 @@ void PlayerInit(struct Player* p)
 
 	p->velocityX = 0.f;		
 	p->velocityY = 0.f;
-	p->speed = 200.f;
+	p->speed = 400.f;
 	p->alpha = 255;
 	
-	p->body.w = p->width-10.f;
-	p->body.h =p->height-10.f;
 
 	p->JumHeight = 600.f;
 	

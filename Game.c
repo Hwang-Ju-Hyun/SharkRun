@@ -165,6 +165,8 @@ void game_update(void)
     }
     
 
+
+
     if (CP_Input_KeyTriggered(KEY_1))
         SharkSpeedUp(&shark, 100.f);
 
@@ -179,7 +181,6 @@ void game_update(void)
         CP_Settings_TextSize(50.0f);
         CP_Font_DrawText("Game Over!", WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
     }
-
 
     // Render second
     {        
