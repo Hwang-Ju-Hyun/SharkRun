@@ -4,6 +4,9 @@
 #include "Header.h"
 #include "Collision.h"
 
+struct Camera;
+struct Platforms;
+
 enum direction
 {
 	LEFT = 0,
@@ -22,14 +25,10 @@ struct Player
 	float velocity;
 	float Acceleration;
 	float JumHeight;
-	
+	float velocityX;
 	int alpha;
 	
 	enum direction d;
-	
-	CP_Color colors;
-
-	struct Collision foot_col;	
 	struct Collision body;
 
 	enum GROUND_OR_AIR IsGrounded;
@@ -41,10 +40,9 @@ struct Player
 
 void PlayerInit(struct Player* p);
 void SetPlayer(struct Player* p, CP_Vector pos, float w, float h, float grav, float v, float jump, int a);
-void PlayerDraw(struct Player* p);
-void PlayerMove(struct Player* p, float dt);
+void PlayerDraw(struct Player* p,struct Camera* c);
 
-void Draw_Player(struct Player* _pPlayer);				//Player를 그린다
+void Draw_Player(struct Player* _pPlayer, struct Camera* c);				//Player를 그린다
 void SetPos(struct Player* _pPlayer,CP_Vector _pVec);	//Player Position을 설정
 void SetWidth(struct Player* _pPlayer);		//Player width를 설정
 void SetHeight(struct Player* _pPlayer);		//Player Height를 설정
@@ -52,9 +50,10 @@ const CP_Vector GetPos(struct Player* _pPlayer);		//Player Position을 가져옴
 const float GetHeight(struct Player* _pPlayer);			//Player width를 가져옴
 const float GetWidth(struct Player* _pPlayer);			//Player Height를 가져옴
 
-void Move_Player(struct Player* _pPlayer, float dt);
+void Move_Player(struct Player* _pPlayer,struct Platforms* _pPlatforms, float dt);
 void SetJump(struct Player* _pPlayer,float _vel,float _gra,float _jumpHeight);
 
 void Jump(struct Player* _pPlayer, float jumpHeight);
 
 void PlayerBodyCollisionArea(struct Player* p);
+void PlayerGravity(struct Player* _pPlayer, int _platformNum, bool IsCol);

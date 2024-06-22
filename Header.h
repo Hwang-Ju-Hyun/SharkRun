@@ -1,6 +1,7 @@
 #pragma once
 
 #pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -15,9 +16,10 @@
 #include "Collision.h"
 
 
-#define WINDOW_WIDTH 2000
+#define WINDOW_WIDTH 1280
 #define WINDOW_HEIGHT 720
 
+#define PI 3.141592
 
 enum BUFFER_SIZE
 {

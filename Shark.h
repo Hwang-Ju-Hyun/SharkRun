@@ -20,8 +20,9 @@ struct Shark
 };
 
 void SharkInit(struct Shark* s);
-void SharkDraw(struct Shark* s, float dt);
-void SharkMove(struct Shark* s, float dt);
+void SharkDraw(struct Shark* s, struct Camera* c, struct Player* player);
+
+void SharkMove(struct Shark* s, float dt, struct Player* player);
 void SharkSpeedUp(struct Shark* s, float v);
 void SharkFree(struct Shark* s);
 
