@@ -45,8 +45,8 @@ void Platform_Init(struct Platforms* p, CP_Image* img)
 		p->platform[i].height = ih;
 
 		///////////////////Collision Init Here//////////////////
-		p->platform[i].col.Pos.x = 0.f;
-		p->platform[i].col.Pos.y = 0.f;
+		p->platform[i].col.Pos.x = p->platform[i].Pos.x;
+		p->platform[i].col.Pos.y = p->platform[i].Pos.y;
 		p->platform[i].col.h = p->platform[i].height;
 		p->platform[i].col.w = p->platform[i].width;
 	}

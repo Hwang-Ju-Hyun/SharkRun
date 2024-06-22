@@ -1,4 +1,5 @@
 #include "Camera.h"
+
 void Camera_Init(struct Camera* _pCamera)
 {
 	//현재 카메라 좌표를 초기화
@@ -71,7 +72,7 @@ CP_Vector GetRenderPlatPos(struct Platform* _pPlatform, struct Camera* _pCamera)
 {
 	CP_Vector result;
 	result.x=  _pPlatform->Pos.x   -   _pCamera->offset.x;
-	result.y= _pPlatform->Pos.y   -    _pCamera->offset.y;	
+	result.y= _pPlatform-> Pos.y   -    _pCamera->offset.y;	
 	return result;
 }
 

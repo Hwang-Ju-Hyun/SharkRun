@@ -39,16 +39,6 @@ bool IsCollision(struct Player* _pPlayer, struct Platform* _pPlatform)
 	return true;
 }
 
-bool IsCollisionXcord(struct Player* _pPlayer,struct Platform* _pPlatform)
-{
-	if (_pPlayer->body.Pos.x + _pPlayer->body.w<_pPlatform->Pos.x
-		|| _pPlayer->body.Pos.x>_pPlatform->Pos.x + _pPlatform->width)
-	{
-		return false;
-	}
-	return true;
-}
-
 
 
 bool sharkCollision(struct Player* p, struct Shark* s)
@@ -58,10 +48,10 @@ bool sharkCollision(struct Player* p, struct Shark* s)
 		   sTopY = s->col.Pos.y,
 		   sBotY = s->col.Pos.y + s->col.h;
 
-	float pLeftX = p->body.Pos.x,
-		 pRightX = p->body.Pos.x + p->body.w,
-		   pTopY = p->body.Pos.y,
-		   pBotY = p->body.Pos.y + p->body.h;
+	float pLeftX = p->Pos.x,
+		 pRightX = p->Pos.x + p->width,
+		   pTopY = p->Pos.y,
+		   pBotY = p->Pos.y + p->height;
 
 	if (sRightX < pLeftX || sLeftX > pRightX || sBotY < pTopY || sTopY > pBotY)
 		return false;

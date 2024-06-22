@@ -19,12 +19,12 @@ struct Player
 	CP_Vector Pos;
 	float width;
 	float height;
-
-	float Gravity;  //중력(낙하)
-	float velocity;
-	float Acceleration;
-	float JumHeight;
+	
 	float velocityX;
+	float velocityY;
+	float speed;
+	float Acceleration;
+	float JumHeight;	
 	int alpha;
 	
 	enum direction d;
@@ -33,8 +33,7 @@ struct Player
 	
 
 	struct Collision body; // collision check	
-	enum GROUND_OR_AIR IsGrounded;
-	bool JumpKeyPressed;
+	enum GROUND_OR_AIR IsGrounded;	
 };
 
 //void Player_Load_fromFile(char* fileName, struct Player* p);		//Player초기정보를 file에서 로드해온다
@@ -53,8 +52,8 @@ const float GetHeight(struct Player* _pPlayer);			//Player width를 가져옴
 const float GetWidth(struct Player* _pPlayer);			//Player Height를 가져옴
 
 void Move_Player(struct Player* _pPlayer,struct Platforms* _pPlatforms, float dt);
-void SetJump(struct Player* _pPlayer,float _vel,float _gra,float _jumpHeight);
+//void SetJump(struct Player* _pPlayer,float _vel,float _gra,float _jumpHeight);
 
 void Jump(struct Player* _pPlayer, float jumpHeight);
 
-void PlayerGravity(struct Player* _pPlayer, int _platformNum, bool IsCol);
+//void PlayerGravity(struct Player* _pPlayer, int _platformNum, bool IsCol);
