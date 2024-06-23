@@ -186,6 +186,31 @@ void game_update(void)
     }
     
    
+    if (AccTime >= 15.f&&AccTime<=30.f)
+    {
+        shark.speed = 250.f;
+        for (int i = 0; i < mP->total; i++)
+        {
+            mP->pf[i].lifeTime = (mP->pf[i].Pos.x) / 600;
+        }
+    }
+    else if (AccTime >= 30.f && AccTime < 50.f)
+    {
+        shark.speed = 265.f;
+        for (int i = 0; i < mP->total; i++)
+        {
+            mP->pf[i].lifeTime = (mP->pf[i].Pos.x) / 1000;
+        }
+    }
+    else if (AccTime > 50.f)
+    {
+        //printf("\n\n\n50second acc\n\n\n");
+        shark.speed = 280.f;
+        for (int i = 0; i < mP->total; i++)
+        {
+            mP->pf[i].lifeTime = (mP->pf[i].Pos.x) / 2800;
+        }
+    }
 
     // 바닥에 떨어지지 않도록 처리 <- 만약 바다를 구현 하면 해당 함수 수정 필요
     /*{

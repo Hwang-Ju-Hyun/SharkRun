@@ -158,7 +158,7 @@ void InitPlatform(struct Platforms* pfs, struct Platform* p, enum AliveOrDead a,
 	float w = dw + (CP_Image_GetWidth(img1) * p->tileSize);
 	p->width = w - 1;
 	p->height = ih;
-	p->lifeTime =  (x / 330) ; // + @ : Adjust time depending on difficulty
+	p->lifeTime =  (x / 280); // + @ : Adjust time depending on difficulty
 	//p->lifeTime = 4.0f;
 	p->spanTime = 0;
 	///////////////////Collision Init Here//////////////////
