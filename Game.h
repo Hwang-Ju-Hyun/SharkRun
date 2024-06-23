@@ -11,7 +11,7 @@
 #include "Platform.h"
 #include "Shark.h"
 #include "Camera.h"
-
+#include "item.h"
 #include "Header.h"
 
 void game_init(void);

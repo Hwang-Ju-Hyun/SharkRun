@@ -20,3 +20,4 @@ CP_Vector GetRenderPlayerPos(struct Player* _pPlayer, struct Camera* _pCamera);
 CP_Vector GetRenderPlayerColPos(struct Player* _pPlayer, struct Camera* _pCamera);
 CP_Vector GetRenderSharkColPos(struct Shark* _pShark, struct Camera* _pCamera);
 CP_Vector GetRenderSharkPos(struct Shark* _pShark, struct Camera* _pCamera);
+CP_Vector GetRenderItemPos(struct Item* _pShark, struct Camera* _pCamera);

@@ -17,7 +17,7 @@ void SharkInit(struct Shark* s)
 	s->Pos.x = 0 - s->width + 10.0f;
 	s->Pos.y = WINDOW_HEIGHT / 2 - (s->height / 3.0f);
 
-	s->speed = 30.0f;
+	s->speed = 130.0f;
 	s->alpha = 255;
 
 	SharkCollisionArea(s);
@@ -69,5 +69,5 @@ void SharkCollisionArea(struct Shark* s)
 	s->col.Pos.x = s->Pos.x;
 	s->col.Pos.y = s->Pos.y;
 	s->col.w = s->width - 20.0f;
-	s->col.h = s->Pos.y + 2000;
+	s->col.h = s->Pos.y + 4000;
 }

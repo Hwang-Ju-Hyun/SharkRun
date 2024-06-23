@@ -17,38 +17,30 @@ void Draw_PlayerCollision(struct Player* p, struct Camera* c)
 	CP_Graphics_DrawRect(Render.x, Render.y, p->body.w, p->body.h);
 }
 
-//CP_Vector GetColliderWorldPos(CP_Vector object_position, CP_Vector collider_position)
-//{
-//	CP_Vector result;
-//	result.x = object_position.x + collider_position.x;
-//	result.y = object_position.y + collider_position.y;
-//	return result;
-//}
-
-bool IsCollision(struct Player* _pPlayer, struct Platform* _pPlatform)
+bool IsCollisionItem(struct Player* _pPlayer, struct Item* _pItem)
 {
-	if (_pPlayer->body.Pos.x + _pPlayer->body.w<_pPlatform->Pos.x
-		|| _pPlayer->body.Pos.x>_pPlatform->Pos.x + _pPlatform->width)
+	if (_pPlayer->Pos.x < _pItem->Pos.x + _pItem->w &&
+		_pPlayer->Pos.x + _pPlayer->width > _pItem->Pos.x &&
+		_pPlayer->Pos.y < _pItem->Pos.y + _pItem->h &&
+		_pPlayer->Pos.y + _pPlayer->height > _pItem->Pos.y)
 	{
-		return false;
+		return true;
 	}
-	if (_pPlayer->body.Pos.y + _pPlayer->body.h<_pPlatform->Pos.y
-		|| _pPlayer->body.Pos.y>_pPlatform->Pos.y + _pPlatform->height)
-	{
-		return false;
-	}
-	return true;
+	return false;
 }
 
-bool IsCollisionXcord(struct Player* _pPlayer,struct Platform* _pPlatform)
+bool checkCollision(struct Player* p, struct Platform* plat)
 {
-	if (_pPlayer->body.Pos.x + _pPlayer->body.w<_pPlatform->Pos.x
-		|| _pPlayer->body.Pos.x>_pPlatform->Pos.x + _pPlatform->width)
+	if (p->Pos.x < plat->col.Pos.x + plat->col.w &&
+		p->Pos.x + p->width > plat->col.Pos.x &&
+		p->Pos.y < plat->col.Pos.y + plat->col.h &&
+		p->Pos.y + p->height > plat->col.Pos.y)
 	{
-		return false;
+		return true;
 	}
-	return true;
+	return false;
 }
+
 
 bool sharkCollision(struct Player* p, struct Shark* s)
 {
@@ -67,11 +59,13 @@ bool sharkCollision(struct Player* p, struct Shark* s)
 	return true;
 }
 
+//코드 이해 안됨
 bool platformCollision(struct Platform* p, float* x, float* y, float w, float h)
 {
 	float rightX = *x + w;
 	float botY = *y + h;
 	
+	//platform collision Position으로  수정
 	float pRightX = p->Pos.x + p->width;
 	float pBotY = p->Pos.y + p->height;
 
@@ -89,7 +83,7 @@ bool platformCollision(struct Platform* p, float* x, float* y, float w, float h)
 	if (!lx) *x = *x + (pRightX - *x);
 	if (!rx) *x = *x - (rightX - p->Pos.x);
 	if (!ty) *y = *y - (botY - p->Pos.y);
-	if (!by) *y = *y + (pBotY - *y);
-	
+	if (!by) *y = *y + (pBotY - *y);		
+
 	return true;
-}
+} 
