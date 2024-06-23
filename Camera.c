@@ -44,26 +44,26 @@ void CallDiff(struct Camera* _pCamera)
 
 void CameraUpdate(struct Camera* _pCamera, struct Player* _pPlayer)
 {	
-	//float deltaTime = CP_System_GetDt();
+	float deltaTime = CP_System_GetDt();
 	//플레이어가 오른쪽으로 어느정도 이동한다면 
-	/*if (CP_Input_KeyDown(KEY_UP))
+	if (CP_Input_KeyDown(KEY_UP))
 	{
-		_pCamera->cameraPos.y -= 500.f * deltaTime;
+		_pCamera->cameraPos.y -= 700.f * deltaTime;
 	}
 	if (CP_Input_KeyDown(KEY_DOWN))
 	{
-		_pCamera->cameraPos.y += 500.f * deltaTime;
+		_pCamera->cameraPos.y += 700.f * deltaTime;
 	}
 	if (CP_Input_KeyDown(KEY_RIGHT))
 	{
-		_pCamera->cameraPos.x += 500.f * deltaTime;
+		_pCamera->cameraPos.x += 700.f * deltaTime;
 	}
 	if (CP_Input_KeyDown(KEY_LEFT))
 	{
-		_pCamera->cameraPos.x -= 500.f * deltaTime;
-	}*/
-	_pCamera->cameraPos.x = _pPlayer->Pos.x;
-	_pCamera->cameraPos.y = _pPlayer->Pos.y;
+		_pCamera->cameraPos.x -= 700.f * deltaTime;
+	}
+	/*_pCamera->cameraPos.x = _pPlayer->Pos.x;
+	_pCamera->cameraPos.y = _pPlayer->Pos.y;*/
 
 	CallDiff(_pCamera);
 }
@@ -107,6 +107,14 @@ CP_Vector GetRenderSharkPos(struct Shark* _pShark, struct Camera* _pCamera)
 	CP_Vector result;
 	result.x = _pShark->Pos.x - _pCamera->offset.x;
 	result.y = _pShark->Pos.y - _pCamera->offset.y;
+	return result;
+}
+
+CP_Vector GetRenderItemPos(struct Item* _pItem,struct Camera* _pCamera)
+{
+	CP_Vector result;
+	result.x = _pItem->Pos.x - _pCamera->offset.x;
+	result.y = _pItem->Pos.y - _pCamera->offset.y;
 	return result;
 }
 

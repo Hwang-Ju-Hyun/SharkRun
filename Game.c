@@ -10,9 +10,9 @@ struct Platforms* mP;
 struct Shark shark;
 struct Player player;
 struct Camera camera;
-
+struct Item item;
 float time = 0;
-
+float AccTime = 0.f;
 //↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 //털끝 하나 건들지 말것
 //↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
@@ -55,16 +55,16 @@ void handleCollision(struct Player* p, struct Platform* plat)
 //털끝 하나 건들지 말것
 //↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
-bool checkCollision(struct Player* p, struct Platform* plat) {
-    if (p->Pos.x < plat->col.Pos.x + plat->col.w &&
-        p->Pos.x + p->width > plat->col.Pos.x &&
-        p->Pos.y < plat->col.Pos.y + plat->col.h &&
-        p->Pos.y + p->height > plat->col.Pos.y)
-    {
-        return true;
-    }
-    return false;
-}
+//bool checkCollision(struct Player* p, struct Platform* plat) {
+//    if (p->Pos.x < plat->col.Pos.x + plat->col.w &&
+//        p->Pos.x + p->width > plat->col.Pos.x &&
+//        p->Pos.y < plat->col.Pos.y + plat->col.h &&
+//        p->Pos.y + p->height > plat->col.Pos.y)
+//    {
+//        return true;
+//    }
+//    return false;
+//}
 
 void game_init(void)
 {
@@ -80,6 +80,9 @@ void game_init(void)
     //카메라 초기로드
     Camera_Init(&camera);
 
+    //아이템 정보 초기로드
+    //InitItem(&item);
+
     if (mP != NULL)
     {
         DeallocatePlatform(mP);
@@ -90,16 +93,16 @@ void game_init(void)
     int ch = LoadPlatformFromFile(mP, &player);
     printf("ch = %d\n", ch);
 
-	/*
-	for (int i = 0; i < platforms.total; i++)
+	
+	/*for (int i = 0; i < platforms.total; i++)
 	{
 		printf("n = %d, pos = %f %f, size = %f %f\n",
 			platforms.total, platforms.platform[i].Pos.x, platforms.platform[i].Pos.y, platforms.platform[i].width, platforms.platform[i].height);
 		
 		printf("gap = %f %f, type = %d, color = %d %d %d %d\n",
 			platforms.platform[i].gap.x, platforms.platform[i].gap.y, platforms.platform[i].type, platforms.platform[i].color.r, platforms.platform[i].color.g, platforms.platform[i].color.b, platforms.platform[i].color.a);
-	}
-	*/
+	}*/
+	
 }
 
 void PlatColliderDraw()
@@ -130,7 +133,7 @@ void game_update(void)
 
     // Delta Time 받기    
     time = CP_System_GetDt();
-
+    AccTime += time;
     // Render first
     {
         CP_Image_Draw(bgImg, (float)CP_Image_GetWidth(bgImg) / 2, (float)CP_Image_GetHeight(bgImg) / 2, (float)CP_Image_GetWidth(bgImg), (float)CP_Image_GetHeight(bgImg), 255);
@@ -162,14 +165,12 @@ void game_update(void)
         player.Pos.y += player.velocityY * time;
     }
     
-
     struct Platform* p = GetFirstDeadPlatform(mP);
     if (p != NULL)
         InitPlatformRandom(mP, p, &player, Alive);
 
-    UpdateAllPlatforms(mP);
+    UpdateAllPlatforms(mP,&player);
     DrawAllPlatforms(mP, tile, &camera);
-
     Draw_Player(&player, &camera);
     SharkDraw(&shark, &camera, &player);
 
@@ -183,16 +184,18 @@ void game_update(void)
             }
         }
     }
+    
+   
 
     // 바닥에 떨어지지 않도록 처리 <- 만약 바다를 구현 하면 해당 함수 수정 필요
-    {
+    /*{
         if (player.Pos.y + player.height > WINDOW_HEIGHT)
         {
             player.Pos.y = WINDOW_HEIGHT - player.height;
             player.velocityY = 0;
             player.IsGrounded = GROUND;
         }
-    }
+    }*/
 
     if (CP_Input_KeyTriggered(KEY_1))
         SharkSpeedUp(&shark, 100.f);
@@ -226,7 +229,20 @@ void game_update(void)
             //PlatColliderDraw();
             //PlayerColliderDraw();
         }
-    }    
+    }
+
+    //플레이어가 땅아래로 추락할시 게임 종료
+    if (WINDOW_HEIGHT <= GetRenderPlayerPos(&player,&camera).y)
+    {
+        time = 0.0;
+        CP_Settings_Fill(CP_Color_Create(100, 180, 250, 255));
+        CP_Settings_Stroke(CP_Color_Create(0, 0, 0, 255));
+        CP_Graphics_DrawRect((WINDOW_WIDTH / 2) - 200, (WINDOW_HEIGHT / 2) - 150, 400, 300);
+        CP_Settings_Fill(CP_Color_Create(0, 0, 00, 255));
+        CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
+        CP_Settings_TextSize(50.0f);
+        CP_Font_DrawText("Game Over!", WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
+    }
 }
 
 void game_exit(void)

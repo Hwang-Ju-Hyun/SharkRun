@@ -1,14 +1,14 @@
 #pragma once
 
 #include "Game.h"
-
+#include "item.h"
 #include "Header.h"
 #include "Collision.h"
 
 #define MAXPLATFORM 30
 #define TILEHEIGHT 41
 
-
+struct Item;
 struct Camera;
 
 enum AliveOrDead
@@ -29,7 +29,7 @@ struct Platform
 	float			width;
 	float			height;
 	float			lifeTime;
-	float			spanTime;
+	float			spanTime;	
 
 	int				tileSize;
 
@@ -38,6 +38,7 @@ struct Platform
 	enum AliveOrDead alive;
 	enum GROUND_OR_AIR ground;
 	struct Collision col;
+	struct Item* item;
 };
 
 struct Platforms
@@ -72,7 +73,9 @@ void InitPlatformsMemory(struct Platforms* pfs, int nr, struct Player* player);
 void DeleteAllPlatforms(struct Platforms* pfs);
 struct Platform* GetFirstDeadPlatform(struct Platforms* pfs);
 
-void UpdateAllPlatforms(const struct Platforms* pfs);
+void UpdateAllPlatforms(const struct Platforms* pfs, struct Player* player); // 아이템 처리 해야해서 수정 함
 void DrawAllPlatforms(const struct Platforms* pfs, CP_Image* img, struct Camera* c);
 
 int SavePlatforms(struct Platforms* pfs);
+bool checkCollision(struct Player* p, struct Platform* plat);
+void handleCollision(struct Player* p, struct Platform* plat);

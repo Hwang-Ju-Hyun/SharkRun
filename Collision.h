@@ -6,6 +6,7 @@ struct Platform;
 struct Platforms;
 struct Shark;
 struct Camera;
+struct Item;
 
 struct Collision
 {
@@ -21,8 +22,8 @@ const float GetPlayerCollisionWidth(struct Player* _pPlayer);
 const float GetPlayerCollisionHeight(struct Player* _pPlayer);
 void Draw_PlayerCollision(struct Player* p,struct Camera* c);
 //Player와 Platform간의 충돌체크
-bool IsCollision(struct Player* _pPlayer, struct Platform* _pPlatform);
-bool IsCollisionXcord(struct Player* _pPlayer, struct Platform* _pPlatform);
+bool IsCollisionItem(struct Player* _pPlayer, struct Item* _pItem);
+bool checkCollision(struct Player* p, struct Platform* plat);
 
 //Player와 Shark간의 충돌 체크
 //bool IsCollision(struct Player* _pPlayer, struct Shark* _pPlatform);

@@ -14,6 +14,8 @@
 #include "Shark.h"
 #include "Game.h"
 #include "Collision.h"
+#include "item.h"
+
 
 
 #define WINDOW_WIDTH 1280
@@ -26,6 +28,13 @@ enum BUFFER_SIZE
 	BUFFERSIZE = 512
 };
 
+enum ITEM_TYPE
+{
+	PLAYER_SPEED_UP,
+	PLAYER_SPEED_DOWN,
+	SHARK_SPEED_UP,
+	SHARK_SPEED_DOWN
+};
 
 enum GROUND_OR_AIR
 {

@@ -27,25 +27,29 @@ int LoadPlatformFromFile(struct Platforms* p, struct Player* player)
 	AllocatePlatform(p, p->total);
 	InitPlatformsMemory(p, RandNum, player);
 
-	for (int j = 0; j < (p->total - RandNum); j++)
-	{
-		////////////////////////////
-		struct Platform* pf = GetFirstDeadPlatform(p);
-		p->AlivePlatforms++;
-		pf->alive = Alive;
 
-		fgets(str, BUFFERSIZE, _inFile);
-		sscanf(str, "%f %f %d %d %d", &pf->Pos.x, &pf->Pos.y,
-			&pf->tileSize, &pf->type, &pf->detail);
-		//sscanf(str, "%f %f %d %d %d", &p->platform[j].Pos.x, &p->platform[j].Pos.y,
-		//	&p->platform[j].tileSize, &p->platform[j].type, &p->platform[j].detail);
-	}
+	//밑에 주석처리된 코드가 왜 필요한지 설명 필요합니다.
+	//for (int j = 0; j < (p->total - RandNum); j++)
+	//{
+	//	////////////////////////////
+	//	struct Platform* pf = GetFirstDeadPlatform(p);
+	//	p->AlivePlatforms++;
+	//	pf->alive = Alive;
+
+	//	/*fgets(str, BUFFERSIZE, _inFile);
+	//	sscanf(str, "%f %f %d %d %d", &pf->Pos.x, &pf->Pos.y,
+	//		&pf->tileSize, &pf->type, &pf->detail);
+	//	sscanf(str, "%f %f %d %d %d", &p->platform[j].Pos.x, &p->platform[j].Pos.y,
+	//		&p->platform[j].tileSize, &p->platform[j].type, &p->platform[j].detail);*/
+	//}
 
 	fclose(_inFile);
 
 	return 1;
 }
-/*
+
+
+/* 안쓰는 거 가틈
 void Platform_Init(struct Platforms* p, CP_Image* img, struct Player* player)
 {
 	LoadPlatformFromFile(p, player);
@@ -66,6 +70,8 @@ void Platform_Init(struct Platforms* p, CP_Image* img, struct Player* player)
 	}
 }
 */
+
+
 void Draw_Platform(struct Platform* p, CP_Image* img,  struct Camera* _c)
 {	
 	float w0, w1, w2, h0, h1, h2;
@@ -152,7 +158,7 @@ void InitPlatform(struct Platforms* pfs, struct Platform* p, enum AliveOrDead a,
 	float w = dw + (CP_Image_GetWidth(img1) * p->tileSize);
 	p->width = w - 1;
 	p->height = ih;
-	p->lifeTime = (x / 128) + 3; // + @ : Adjust time depending on difficulty
+	p->lifeTime =  (x / 330) ; // + @ : Adjust time depending on difficulty
 	//p->lifeTime = 4.0f;
 	p->spanTime = 0;
 	///////////////////Collision Init Here//////////////////
@@ -163,6 +169,7 @@ void InitPlatform(struct Platforms* pfs, struct Platform* p, enum AliveOrDead a,
 }
 
 float tile_width[4] = { 0, 70, 120, 170 };
+
 void InitPlatformRandom(struct Platforms* pfs, struct Platform* p, struct Player* player, enum AliveOrDead a)
 {
 	if (p == NULL) return;
@@ -172,7 +179,7 @@ void InitPlatformRandom(struct Platforms* pfs, struct Platform* p, struct Player
 
 	float degree = CP_Random_RangeFloat(-45, 45);
 	float rx = CP_Random_RangeFloat(0, 1280);
-	float ry = CP_Random_RangeFloat(0, 360);
+	float ry = CP_Random_RangeFloat(0, 100);
 
 	printf("player x = %f, y = %f\n", player->Pos.x, player->Pos.y);
 	
@@ -182,13 +189,14 @@ void InitPlatformRandom(struct Platforms* pfs, struct Platform* p, struct Player
 
 	tileSize = CP_Random_RangeInt(1, 3);
 
-	for (int i = 0; i < pfs->total; i++)
+	/*for (int i = 0; i < pfs->total; i++)
 	{
 		if (platformCollision(&pfs->pf[i], &x, &y, tile_width[tileSize], TILEHEIGHT))
 		{
 			printf("collision and correction %d\n", i);
 		}
-	}
+	}*/
+
 
 	int type = 0;
 	int d = 0;
@@ -311,6 +319,15 @@ void InitPlatformsMemory(struct Platforms* pfs, int nr, struct Player* player)
 			Alive = 0;
 
 		InitPlatformRandom(pfs, &pfs->pf[i], player, Alive);
+		
+		if (Alive)
+		{
+			int hasItem = CP_Random_RangeInt(0, 1); // 무작위로 이 플랫폼에 아이템이 있는지 결정
+			if (hasItem)
+			{
+				InitItem(pfs->pf[i].item, &pfs->pf[i]);
+			}
+		}
 	}
 
 }
@@ -336,13 +353,21 @@ struct Platform* GetFirstDeadPlatform(struct Platforms* pfs)
 	return NULL;
 }
 
-void UpdateAllPlatforms(const struct Platforms* pfs)
+void UpdateAllPlatforms(const struct Platforms* pfs, struct Player* player)
 {
 	if (pfs == NULL) return;
 	for (int i = 0; i < pfs->total; i++)
 	{
 		if (pfs->pf[i].alive == Alive)
+		{
 			UpdatePlatform(pfs, &pfs->pf[i]);
+
+			//// 아이템이 살아있으면 업데이트
+			//if (pfs->pf[i].item->IsAlive)
+			//{
+			//	ItemUpdate(pfs->pf[i].item, player); // 플레이어와 상어가 여기서 사용된다고 가정
+			//}
+		}
 	}
 }
 
@@ -354,6 +379,11 @@ void DrawAllPlatforms(const struct Platforms* pfs, CP_Image* img, struct Camera*
 	{
 		if (pfs->pf[i].alive == Alive)
 			DrawPlatform(&pfs->pf[i], img, c);
+
+		//if (pfs->pf[i].item->IsAlive)
+		//{
+		//	DrawItem(pfs->pf[i].item, c);
+		//}
 	}
 }
 
