@@ -22,8 +22,8 @@ void PlayerInit(struct Player* p)
 	p->JumHeight = 600.f;
 	
 	p->d = RIGHT;	
-
-	p->IsPlayerItemGet = false;
+	p->IsAlive = true;
+	//p->IsPlayerItemGet = false;
 }
 
 void SetPlayer(struct Player* p, CP_Vector pos, float w, float h, float grav, float v, float jump, int a)

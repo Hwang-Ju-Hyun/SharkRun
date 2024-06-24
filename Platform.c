@@ -21,7 +21,7 @@ int LoadPlatformFromFile(struct Platforms* p, struct Player* player)
 	int RandNum = 0;
 	char str[BUFFERSIZE] = { '\0' };
 	fgets(str, BUFFERSIZE, _inFile); //read total
-	sscanf(str, "%d %d", &p->total, &RandNum);
+	sscanf_s(str, "%d %d", &p->total, &RandNum);
 
 	///////////////////////////////
 	AllocatePlatform(p, p->total);

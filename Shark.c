@@ -69,5 +69,5 @@ void SharkCollisionArea(struct Shark* s)
 	s->col.Pos.x = s->Pos.x;
 	s->col.Pos.y = s->Pos.y;
 	s->col.w = s->width - 20.0f;
-	s->col.h = s->Pos.y + 4000;
+	s->col.h = s->Pos.y + 10000;
 }

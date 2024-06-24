@@ -33,8 +33,8 @@ struct Player
 
 	enum GROUND_OR_AIR IsGrounded;
 	bool JumpKeyPressed;
-
-	bool IsPlayerItemGet;//플레이어가 아이템을 먹었다면
+	bool IsAlive;
+	//bool IsPlayerItemGet;//플레이어가 아이템을 먹었다면
 };
 
 //void Player_Load_fromFile(char* fileName, struct Player* p);		//Player초기정보를 file에서 로드해온다

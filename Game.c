@@ -55,17 +55,6 @@ void handleCollision(struct Player* p, struct Platform* plat)
 //털끝 하나 건들지 말것
 //↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
-//bool checkCollision(struct Player* p, struct Platform* plat) {
-//    if (p->Pos.x < plat->col.Pos.x + plat->col.w &&
-//        p->Pos.x + p->width > plat->col.Pos.x &&
-//        p->Pos.y < plat->col.Pos.y + plat->col.h &&
-//        p->Pos.y + p->height > plat->col.Pos.y)
-//    {
-//        return true;
-//    }
-//    return false;
-//}
-
 void game_init(void)
 {
     white = CP_Color_Create(255, 255, 255, 255);
@@ -92,7 +81,7 @@ void game_init(void)
     mP->pf = NULL;
     int ch = LoadPlatformFromFile(mP, &player);
     printf("ch = %d\n", ch);
-
+    AccTime = 0.f;
 	
 	/*for (int i = 0; i < platforms.total; i++)
 	{
@@ -129,7 +118,7 @@ void game_update(void)
     if (CP_Input_MouseTriggered(MOUSE_BUTTON_RIGHT))
     {
         CP_Engine_SetNextGameState(main_init, main_update, main_exit);
-    }
+    }    
 
     // Delta Time 받기    
     time = CP_System_GetDt();
@@ -184,6 +173,7 @@ void game_update(void)
             }
         }
     }
+
     
    
     if (AccTime >= 15.f&&AccTime<=30.f)
@@ -211,6 +201,16 @@ void game_update(void)
             mP->pf[i].lifeTime = (mP->pf[i].Pos.x) / 2800;
         }
     }
+    else if (AccTime > 120.f)
+    {
+        //printf("\n\n\n50second acc\n\n\n");
+        shark.speed = 300.f;
+        for (int i = 0; i < mP->total; i++)
+        {
+            mP->pf[i].lifeTime = (mP->pf[i].Pos.x) / 2800;
+        }
+    }
+
 
     // 바닥에 떨어지지 않도록 처리 <- 만약 바다를 구현 하면 해당 함수 수정 필요
     /*{
@@ -235,6 +235,9 @@ void game_update(void)
         CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
         CP_Settings_TextSize(50.0f);
         CP_Font_DrawText("Game Over!", WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
+        CP_Settings_TextSize(20.0f);
+        CP_Font_DrawText("Restart Press 'R'Button", WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 + 50.f);
+        player.IsAlive = false;
     }
 
 	if (sharkCollision(&player, &shark)) //Game over
@@ -249,15 +252,17 @@ void game_update(void)
             CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
             CP_Settings_TextSize(50.0f);
             CP_Font_DrawText("Game Over!", WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
-            
+            CP_Settings_TextSize(20.0f);
+            CP_Font_DrawText("Restart Press 'R'Button", WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 + 50.f);
             //Collider 그리는 함수 (필요 있을 때 많으니깐 있으니깐 지우지 말것)
             //PlatColliderDraw();
             //PlayerColliderDraw();
+            player.IsAlive = false;
         }
     }
 
     //플레이어가 땅아래로 추락할시 게임 종료
-    if (WINDOW_HEIGHT <= GetRenderPlayerPos(&player,&camera).y)
+    if ((WINDOW_HEIGHT <= GetRenderPlayerPos(&player,&camera).y)&& player.velocityY>=1000)
     {
         time = 0.0;
         CP_Settings_Fill(CP_Color_Create(100, 180, 250, 255));
@@ -267,6 +272,15 @@ void game_update(void)
         CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
         CP_Settings_TextSize(50.0f);
         CP_Font_DrawText("Game Over!", WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
+        CP_Settings_TextSize(20.0f);
+        CP_Font_DrawText("Restart Press 'R' Button", WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 + 50.f);
+        player.IsAlive = false;
+    }
+    if (player.IsAlive == false && CP_Input_KeyTriggered(KEY_R))
+    {
+        //재시작
+        game_init();        
+        player.IsAlive = true;
     }
 }
 
