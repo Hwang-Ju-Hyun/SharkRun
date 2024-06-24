@@ -19,7 +19,7 @@ bool AccTimeAdd = true;
 float texTime = 0.f;
 int AcctexTimeInt = 0;
 bool IsdeathSound = false;
-bool musicFlag = false;
+//bool musicFlag = false;
 
 //↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 //털끝 하나 건들지 말것
@@ -72,7 +72,7 @@ CP_Sound jump_sound2 = NULL;
 CP_Sound jump_sound3 = NULL;
 CP_Sound death_sound = NULL;
 
-CP_Sound music = NULL;
+//CP_Sound music = NULL;
 
 
 void game_init(void)
@@ -80,7 +80,7 @@ void game_init(void)
     white = CP_Color_Create(255, 255, 255, 255);
 	bgImg = CP_Image_Load("Assets\\bg.png");
    
-    music = CP_Sound_LoadMusic("./Assets/music.wav");
+    //music = CP_Sound_LoadMusic("./Assets/music.wav");
 
     //폰트 로드
     myFont=CP_Font_Load("Assets/upheavtt.ttf");
@@ -139,11 +139,11 @@ void game_update(void)
     CP_Settings_Fill(CP_Color_Create(0, 255, 255, 255));
     CP_Font_Set(myFont);
     
-    if (musicFlag == false)
+    /*if (musicFlag == false)
     {        
         CP_Sound_PlayMusic(music);
         musicFlag = true;
-    }
+    }*/
         
 
     // Delta Time 받기    
@@ -360,7 +360,7 @@ void game_update(void)
     if (player.IsAlive == false)
     {
         mP->total = 0;     
-        musicFlag = false;
+//        musicFlag = false;
         //재시작
         if (CP_Input_KeyTriggered(KEY_R))
         {          
