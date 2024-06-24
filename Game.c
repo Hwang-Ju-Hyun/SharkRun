@@ -13,6 +13,13 @@ struct Camera camera;
 struct Item item;
 float time = 0;
 float AccTime = 0.f;
+float CamTexAccTime = 0.f;
+int CamTexAccTimeInt = 0;
+bool AccTimeAdd = true;
+float texTime = 0.f;
+int AcctexTimeInt = 0;
+
+
 //↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 //털끝 하나 건들지 말것
 //↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
@@ -55,11 +62,24 @@ void handleCollision(struct Player* p, struct Platform* plat)
 //털끝 하나 건들지 말것
 //↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
+//폰트
+CP_Font myFont;
+//사운드
+CP_Sound mySound = NULL;
+
 void game_init(void)
 {
     white = CP_Color_Create(255, 255, 255, 255);
 	bgImg = CP_Image_Load("Assets\\bg.png");
-
+    
+    //폰트 로드
+    myFont=CP_Font_Load("Assets/upheavtt.ttf");
+    if (myFont == NULL)
+    {
+        printf("凸");
+        return;
+    }
+        
     InitTileImg(tile);
 
     //플레이어 초기로드
@@ -114,22 +134,23 @@ void game_update(void)
 {
     CP_Graphics_ClearBackground(white);
     CP_Settings_Fill(CP_Color_Create(0, 255, 255, 255));
-
-    if (CP_Input_MouseTriggered(MOUSE_BUTTON_RIGHT))
+    CP_Font_Set(myFont);
+    /*if (CP_Input_MouseTriggered(MOUSE_BUTTON_RIGHT))
     {
         CP_Engine_SetNextGameState(main_init, main_update, main_exit);
-    }    
+    }    */
 
     // Delta Time 받기    
     time = CP_System_GetDt();
-    AccTime += time;
+    if(AccTimeAdd==true)
+        AccTime += time;
     // Render first
     {
         CP_Image_Draw(bgImg, (float)CP_Image_GetWidth(bgImg) / 2, (float)CP_Image_GetHeight(bgImg) / 2, (float)CP_Image_GetWidth(bgImg), (float)CP_Image_GetHeight(bgImg), 255);
 
         CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
-        CP_Settings_TextSize(50.0f);
-        CP_Font_DrawText("Game", WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
+        /*CP_Settings_TextSize(50.0f);
+        CP_Font_DrawText("Game", WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);*/
     }
 
     //카메라 업데이트
@@ -173,9 +194,7 @@ void game_update(void)
             }
         }
     }
-
     
-   
     if (AccTime >= 15.f&&AccTime<=30.f)
     {
         shark.speed = 250.f;
@@ -183,105 +202,144 @@ void game_update(void)
         {
             mP->pf[i].lifeTime = (mP->pf[i].Pos.x) / 600;
         }
+        camera.cameraChange = false;
+        CamTexAccTime = 0.f;
+        CamTexAccTimeInt = 0;
     }
     else if (AccTime >= 30.f && AccTime < 50.f)
     {
         shark.speed = 265.f;
         for (int i = 0; i < mP->total; i++)
         {
-            mP->pf[i].lifeTime = (mP->pf[i].Pos.x) / 1000;
+            mP->pf[i].lifeTime = (mP->pf[i].Pos.x) / 1600;
         }
+        camera.cameraChange = true;
     }
-    else if (AccTime > 50.f)
+    else if (AccTime > 50.f&&AccTime<=75.f)
     {
         //printf("\n\n\n50second acc\n\n\n");
         shark.speed = 280.f;
         for (int i = 0; i < mP->total; i++)
         {
-            mP->pf[i].lifeTime = (mP->pf[i].Pos.x) / 2800;
+            mP->pf[i].lifeTime = (mP->pf[i].Pos.x) / 2800;        
         }
+        camera.cameraChange =false;
+        CamTexAccTime = 0.f;
+        CamTexAccTimeInt = 0;
+    } 
+    else if (AccTime > 75.f && AccTime < 120.f)
+    {
+        camera.cameraChange = true;        
     }
     else if (AccTime > 120.f)
     {
         //printf("\n\n\n50second acc\n\n\n");
         shark.speed = 300.f;
+        camera.cameraChange = false;
+        CamTexAccTime =0.f;
+        CamTexAccTimeInt = 0;
         for (int i = 0; i < mP->total; i++)
         {
             mP->pf[i].lifeTime = (mP->pf[i].Pos.x) / 2800;
         }
     }
-
-
-    // 바닥에 떨어지지 않도록 처리 <- 만약 바다를 구현 하면 해당 함수 수정 필요
-    /*{
-        if (player.Pos.y + player.height > WINDOW_HEIGHT)
-        {
-            player.Pos.y = WINDOW_HEIGHT - player.height;
-            player.velocityY = 0;
-            player.IsGrounded = GROUND;
-        }
-    }*/
-
-    if (CP_Input_KeyTriggered(KEY_1))
-        SharkSpeedUp(&shark, 100.f);
-
-
-    if (sharkCollision(&player, &shark)) //Game over
+   
+    if (CP_Input_KeyTriggered(KEY_Q))//플레이어 포지션 따라가기
     {
-        time = 0.0;
-        CP_Settings_Fill(CP_Color_Create(100, 180, 250, 255));
-        CP_Settings_Stroke(CP_Color_Create(0, 0, 0, 255));
-        CP_Graphics_DrawRect((WINDOW_WIDTH / 2) - 200, (WINDOW_HEIGHT / 2) - 150, 400, 300);
-        CP_Settings_Fill(CP_Color_Create(0, 0, 00, 255));
-        CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
-        CP_Settings_TextSize(50.0f);
-        CP_Font_DrawText("Game Over!", WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
-        CP_Settings_TextSize(20.0f);
-        CP_Font_DrawText("Restart Press 'R'Button", WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 + 50.f);
-        player.IsAlive = false;
+        camera.cameraPos.x = player.Pos.x;
+        camera.cameraPos.y = player.Pos.y;
+        //SharkSpeedUp(&shark, 100.f);
     }
+    
 
-	if (sharkCollision(&player, &shark)) //Game over
-	{
-        if (!CP_Input_KeyTriggered(KEY_0))
+    //Alive Texture draw
+    {
+        if (player.IsAlive == true)
         {
-            time = 0.0;
-            CP_Settings_Fill(CP_Color_Create(100, 180, 250, 255));
-            CP_Settings_Stroke(CP_Color_Create(0, 0, 0, 255));
-            CP_Graphics_DrawRect((WINDOW_WIDTH / 2) - 200, (WINDOW_HEIGHT / 2) - 150, 400, 300);
-            CP_Settings_Fill(CP_Color_Create(0, 0, 00, 255));
             CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
+            char buffer[50] = { 0 };
+            CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
             CP_Settings_TextSize(50.0f);
-            CP_Font_DrawText("Game Over!", WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
-            CP_Settings_TextSize(20.0f);
-            CP_Font_DrawText("Restart Press 'R'Button", WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 + 50.f);
-            //Collider 그리는 함수 (필요 있을 때 많으니깐 있으니깐 지우지 말것)
-            //PlatColliderDraw();
-            //PlayerColliderDraw();
-            player.IsAlive = false;
-        }
+            sprintf_s(buffer, 50, "TIME : %f", AccTime);
+            CP_Settings_TextSize(50.0f);
+            CP_Font_DrawText(buffer, 225, 650);
+        }        
     }
+    
+    
+    if (camera.cameraChange == true)
+    {
+        CamTexAccTime += CP_System_GetDt();
+        CamTexAccTimeInt =(int)CamTexAccTime;
+        CP_Settings_Fill(CP_Color_Create(255, 0, 0, 255));
+        CP_Settings_TextSize(40.f);
+        CP_Font_DrawText("!!ARROW KEY REVERSED!!", 650, 640);        
+    }
+    if (CamTexAccTimeInt % 3 == 0&& camera.cameraChange == true)
+    {
+        CP_Settings_Fill(CP_Color_Create(0, 0, 255, 255));
+        CP_Settings_TextSize(40.f);
+        CP_Font_DrawText("!!ARROW KEY REVERSED!!", 650, 640);
+    }
+   
 
     //플레이어가 땅아래로 추락할시 게임 종료
-    if ((WINDOW_HEIGHT <= GetRenderPlayerPos(&player,&camera).y)&& player.velocityY>=1000)
+    if ((WINDOW_HEIGHT <= GetRenderPlayerPos(&player,&camera).y)&& player.velocityY>=1000
+        || sharkCollision(&player, &shark))
     {
         time = 0.0;
-        CP_Settings_Fill(CP_Color_Create(100, 180, 250, 255));
+        CP_Settings_Fill(CP_Color_Create(250, 180, 0, 100));
         CP_Settings_Stroke(CP_Color_Create(0, 0, 0, 255));
-        CP_Graphics_DrawRect((WINDOW_WIDTH / 2) - 200, (WINDOW_HEIGHT / 2) - 150, 400, 300);
-        CP_Settings_Fill(CP_Color_Create(0, 0, 00, 255));
+        CP_Graphics_DrawRect((WINDOW_WIDTH / 2) - 250, (WINDOW_HEIGHT / 2) - 120, 500, 300);
+        CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
+
+        texTime += CP_System_GetDt()+0.f;
+        AcctexTimeInt =(int)texTime;
+        char buffer[50] = { 0 };
+        if (AcctexTimeInt % 2 != 0)
+        {
+            CP_Settings_Fill(CP_Color_Create(CP_Random_RangeInt(150,255),0, CP_Random_RangeInt(0, 255), 255));
+            sprintf_s(buffer, 50, "TIME : %f", AccTime);
+            CP_Settings_TextSize(50.0f);
+            //CP_Font_DrawText(buffer, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 - 20.f);
+            CP_Font_DrawText(buffer, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 - 5.f);
+        }
+        else
+        {
+            CP_Settings_Fill(CP_Color_Create(CP_Random_RangeInt(150, 255), 0, CP_Random_RangeInt(0, 255), 255));
+            sprintf_s(buffer, 50, "TIME : %f", AccTime);
+            CP_Settings_TextSize(50.0f);
+            CP_Font_DrawText(buffer, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 - 5.f);
+        }
+        
+        CP_Settings_Fill(CP_Color_Create(240, 0, 0, 255));
         CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
         CP_Settings_TextSize(50.0f);
-        CP_Font_DrawText("Game Over!", WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
-        CP_Settings_TextSize(20.0f);
-        CP_Font_DrawText("Restart Press 'R' Button", WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 + 50.f);
+        CP_Font_DrawText("GAME OVER", WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2-80.f);
+        CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
+        CP_Settings_TextSize(30.0f);        
+        CP_Font_DrawText("Restart Press 'R' Button", WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2+60 );
+        CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
+        CP_Settings_TextSize(30.0f);
+        CP_Font_DrawText("Quit 'Q' Button", WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 +100);
         player.IsAlive = false;
+        AccTimeAdd = false;
     }
-    if (player.IsAlive == false && CP_Input_KeyTriggered(KEY_R))
+    if (player.IsAlive == false)
     {
+        mP->total = 0;        
         //재시작
-        game_init();        
-        player.IsAlive = true;
+        if (CP_Input_KeyTriggered(KEY_R))
+        {          
+            game_init();
+            player.IsAlive = true;
+            AccTimeAdd = true;
+        }
+        if (CP_Input_KeyTriggered(KEY_Q))
+        {
+            game_exit();
+            CP_Engine_SetNextGameState(main_init, main_update, main_exit);
+        }
     }
 }
 

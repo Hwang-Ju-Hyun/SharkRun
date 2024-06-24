@@ -98,7 +98,7 @@ const float GetWidth(struct Player* _pPlayer)
 }
 
 void Move_Player(struct Player* _pPlayer,struct Platforms* _pPlatforms, float dt)
-{
+{	
 	if(CP_Input_KeyTriggered(KEY_SPACE))//점프
 	{
 		//이단점프 방지
@@ -107,7 +107,7 @@ void Move_Player(struct Player* _pPlayer,struct Platforms* _pPlatforms, float dt
 			_pPlayer->velocityY -= _pPlayer->JumHeight;
 			_pPlayer->IsGrounded = AIR;
 		}		
-	}	
+	}		
 	// 좌우 이동 처리
 	if (CP_Input_KeyDown(KEY_D) || CP_Input_KeyReleased(KEY_D))
 	{

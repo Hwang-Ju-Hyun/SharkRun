@@ -32,7 +32,7 @@ struct Player
 	struct Collision body;
 
 	enum GROUND_OR_AIR IsGrounded;
-	bool JumpKeyPressed;
+	bool JumpKeyPressed;	
 	bool IsAlive;
 	//bool IsPlayerItemGet;//플레이어가 아이템을 먹었다면
 };

@@ -7,20 +7,50 @@ void main_init(void)
 	bgColor = CP_Color_Create(255, 255, 255, 255);
 }
 
+void drawMenu(float x,float y,float w,float h,CP_Color color)
+{	
+	CP_Settings_Fill(color);	
+	CP_Graphics_DrawRect(x, y, w, h);
+}
+
+void drawStartTex(const char* str, float texSize, CP_Color color)
+{
+	CP_Settings_TextSize(texSize);
+	CP_Settings_Fill(color);
+	CP_Font_DrawText("START", WINDOW_WIDTH / 2-60, WINDOW_HEIGHT / 2);
+}
+
 void main_update(void)
 {	
 	CP_Graphics_ClearBackground(bgColor);
 
-	CP_Settings_Fill(CP_Color_Create(0, 0, 255, 255));
+	
+	float menu_PosX = WINDOW_WIDTH / 4 + 22;
+	float menu_PosY = WINDOW_HEIGHT / 5 + 100;
+	float menu_width=650.f;
+	float menu_height = 200.f;
+	CP_Color color = CP_Color_Create(255, 255,255,255);
 
-	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
-	CP_Settings_TextSize(50.0f);
-	CP_Font_DrawText("Main", WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
+	drawMenu(menu_PosX, menu_PosY, menu_width, menu_height,color);
+	
+	CP_Color TexColor = CP_Color_Create(0, 0, 255, 255);
+	drawStartTex("START", 80.f, TexColor);
+	
+	
 
-	if (CP_Input_MouseTriggered(MOUSE_BUTTON_LEFT))
+	if (CP_Input_GetMouseX() > menu_PosX && CP_Input_GetMouseX() < menu_PosX + menu_width &&
+		CP_Input_GetMouseY() > menu_PosY && CP_Input_GetMouseY() < menu_PosY + menu_height)
 	{
-		CP_Engine_SetNextGameState(game_init, game_update, game_exit);
+		TexColor= CP_Color_Create(255, 0, 0, 255);
+		drawStartTex("START", 80.f, TexColor);
+		//drawMenu(menu_PosX, menu_PosY, menu_width, menu_height, color);
+		if (CP_Input_MouseTriggered(MOUSE_BUTTON_LEFT))
+		{
+			CP_Engine_SetNextGameState(game_init, game_update, game_exit);
+		}
 	}
+
+	
 }
 
 void main_exit(void)

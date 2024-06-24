@@ -178,8 +178,8 @@ void InitPlatformRandom(struct Platforms* pfs, struct Platform* p, struct Player
 	int tileSize;
 
 	float degree = CP_Random_RangeFloat(-45, 45);
-	float rx = CP_Random_RangeFloat(0, 1280);
-	float ry = CP_Random_RangeFloat(0, 100);
+	float rx = CP_Random_RangeFloat(-200, 1280);
+	float ry = CP_Random_RangeFloat(-800, -600);
 
 	printf("player x = %f, y = %f\n", player->Pos.x, player->Pos.y);
 	
@@ -224,7 +224,7 @@ void DeallocatePlatform(struct Platforms* pfs)
 
 	if (pfs->pf != NULL)
 		free(pfs->pf);
-
+	//free(pfs->pf);
 	pfs->pf = NULL;
 }
 

@@ -9,6 +9,7 @@ void Camera_Init(struct Camera* _pCamera)
 	_pCamera->curLookAt.y = _pCamera->cameraPos.y;
 	_pCamera->time = 1.f;
 	_pCamera->accTime = 0.f;
+	_pCamera->cameraChange = false;
 }
 
 void CallDiff(struct Camera* _pCamera)
@@ -45,23 +46,47 @@ void CallDiff(struct Camera* _pCamera)
 void CameraUpdate(struct Camera* _pCamera, struct Player* _pPlayer)
 {	
 	float deltaTime = CP_System_GetDt();
-	//플레이어가 오른쪽으로 어느정도 이동한다면 
-	if (CP_Input_KeyDown(KEY_UP))
+	if (_pCamera->cameraChange == false)
 	{
-		_pCamera->cameraPos.y -= 700.f * deltaTime;
+		//플레이어가 오른쪽으로 어느정도 이동한다면 
+		if (CP_Input_KeyDown(KEY_UP))
+		{
+			_pCamera->cameraPos.y -= 600.f * deltaTime;
+		}
+		if (CP_Input_KeyDown(KEY_DOWN))
+		{
+			_pCamera->cameraPos.y += 600.f * deltaTime;
+		}
+		if (CP_Input_KeyDown(KEY_RIGHT))
+		{
+			_pCamera->cameraPos.x += 600.f * deltaTime;
+		}
+		if (CP_Input_KeyDown(KEY_LEFT))
+		{
+			_pCamera->cameraPos.x -= 600.f * deltaTime;
+		}
 	}
-	if (CP_Input_KeyDown(KEY_DOWN))
+	else if (_pCamera->cameraChange == true)
 	{
-		_pCamera->cameraPos.y += 700.f * deltaTime;
+		//플레이어가 오른쪽으로 어느정도 이동한다면 
+		if (CP_Input_KeyDown(KEY_UP))
+		{
+			_pCamera->cameraPos.y += 600.f * deltaTime;
+		}
+		if (CP_Input_KeyDown(KEY_DOWN))
+		{
+			_pCamera->cameraPos.y -= 600.f * deltaTime;
+		}
+		if (CP_Input_KeyDown(KEY_RIGHT))
+		{
+			_pCamera->cameraPos.x -= 600.f * deltaTime;
+		}
+		if (CP_Input_KeyDown(KEY_LEFT))
+		{
+			_pCamera->cameraPos.x += 600.f * deltaTime;
+		}
 	}
-	if (CP_Input_KeyDown(KEY_RIGHT))
-	{
-		_pCamera->cameraPos.x += 700.f * deltaTime;
-	}
-	if (CP_Input_KeyDown(KEY_LEFT))
-	{
-		_pCamera->cameraPos.x -= 700.f * deltaTime;
-	}
+	
 	/*_pCamera->cameraPos.x = _pPlayer->Pos.x;
 	_pCamera->cameraPos.y = _pPlayer->Pos.y;*/
 

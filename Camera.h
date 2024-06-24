@@ -10,6 +10,7 @@ struct Camera
 	float speed;
 	float time;
 	float accTime;
+	bool cameraChange;
 	struct Player* player;		
 };
 
