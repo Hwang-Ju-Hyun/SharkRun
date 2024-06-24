@@ -19,6 +19,7 @@ bool AccTimeAdd = true;
 float texTime = 0.f;
 int AcctexTimeInt = 0;
 bool IsdeathSound = false;
+bool musicFlag = false;
 
 //↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 //털끝 하나 건들지 말것
@@ -71,7 +72,7 @@ CP_Sound jump_sound2 = NULL;
 CP_Sound jump_sound3 = NULL;
 CP_Sound death_sound = NULL;
 
-
+CP_Sound music = NULL;
 
 
 void game_init(void)
@@ -79,7 +80,7 @@ void game_init(void)
     white = CP_Color_Create(255, 255, 255, 255);
 	bgImg = CP_Image_Load("Assets\\bg.png");
    
-
+    music = CP_Sound_LoadMusic("./Assets/music.wav");
 
     //폰트 로드
     myFont=CP_Font_Load("Assets/upheavtt.ttf");
@@ -137,10 +138,13 @@ void game_update(void)
     CP_Graphics_ClearBackground(white);    
     CP_Settings_Fill(CP_Color_Create(0, 255, 255, 255));
     CP_Font_Set(myFont);
-    /*if (CP_Input_MouseTriggered(MOUSE_BUTTON_RIGHT))
-    {
-        CP_Engine_SetNextGameState(main_init, main_update, main_exit);
-    }    */
+    
+    if (musicFlag == false)
+    {        
+        CP_Sound_PlayMusic(music);
+        musicFlag = true;
+    }
+        
 
     // Delta Time 받기    
     time = CP_System_GetDt();
@@ -351,11 +355,12 @@ void game_update(void)
         CP_Settings_TextSize(30.0f);
         CP_Font_DrawText("Quit 'Q' Button", WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 +100);
         player.IsAlive = false;
-        AccTimeAdd = false;
+        AccTimeAdd = false;        
     }
     if (player.IsAlive == false)
     {
-        mP->total = 0;             
+        mP->total = 0;     
+        musicFlag = false;
         //재시작
         if (CP_Input_KeyTriggered(KEY_R))
         {          
