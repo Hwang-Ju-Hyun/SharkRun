@@ -225,6 +225,7 @@ void game_update(void)
     if (CP_Input_KeyTriggered(KEY_1))
         SharkSpeedUp(&shark, 100.f);
 
+
     if (sharkCollision(&player, &shark)) //Game over
     {
         time = 0.0;
