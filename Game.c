@@ -374,16 +374,17 @@ void game_update(void)
 
 void game_exit(void)
 {
+    
     if (mP != NULL)
     {
         DeallocatePlatform(mP);
         free(mP);
     }
-
+    CP_Engine_Terminate();
 	SharkFree(&shark);
 	FreeImg(tile);
     CP_Sound_Free(&jump_sound1);
     CP_Sound_Free(&jump_sound2);
     CP_Sound_Free(&jump_sound3);
-    CP_Sound_Free(&death_sound);
+    CP_Sound_Free(&death_sound);    
 }

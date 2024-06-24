@@ -87,8 +87,11 @@ void main_update(void)
 		{
 			Tex2Color = CP_Color_Create(255, 0, 0, 255);
 			drawStartTex2("Exit", 80.f, Tex2Color);
-			//drawMenu(menu_PosX, menu_PosY, menu_width, menu_height, color);
-			main_exit();
+			if (CP_Input_MouseTriggered(MOUSE_BUTTON_LEFT))
+			{
+				CP_Engine_Terminate();
+			}
+			
 		}
 	}
 	
@@ -97,8 +100,7 @@ void main_update(void)
 }
 
 void main_exit(void)
-{
-	//exit
+{	
 }
 
 int main(void)

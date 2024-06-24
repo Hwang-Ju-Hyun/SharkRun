@@ -1,6 +1,6 @@
 #pragma once
 
-#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
+//#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
 
 #include <stdio.h>
 #include <stdlib.h>
