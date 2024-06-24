@@ -2,6 +2,8 @@
 
 CP_Color bgColor;
 CP_Image Digipen = NULL;
+CP_Image teamLogo = NULL;
+
 float ACCtime = 0;
 void main_init(void)
 {
@@ -12,6 +14,7 @@ void main_init(void)
 		printf("Tlqkf");
 		return;
 	}
+	teamLogo = CP_Image_Load("./Assets/Teamlogo.png");
 		
 }
 
@@ -43,9 +46,16 @@ void main_update(void)
 		CP_Graphics_ClearBackground(bgColor);
 		int width = WINDOW_WIDTH;
 		int height = WINDOW_HEIGHT;		
-		CP_Image_Draw(Digipen, (float)width/2, (float)height/2, (float)width , (float)height-50.f, 255);
+		CP_Image_Draw(Digipen, (float)width / 2, (float)height / 2,505*2, 122*2, 255);
 	}
-	else
+	else if (ACCtime > 3.f && ACCtime <= 6.f)
+	{
+		CP_Graphics_ClearBackground(bgColor);
+		int width = WINDOW_WIDTH;
+		int height = WINDOW_HEIGHT;				
+		CP_Image_Draw(teamLogo, (float)width / 2, (float)height / 2, 617, 208, 255);
+	}
+	else if(ACCtime>6.f)
 	{
 		CP_Graphics_ClearBackground(bgColor);
 

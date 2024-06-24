@@ -184,7 +184,7 @@ void InitPlatformRandom(struct Platforms* pfs, struct Platform* p, struct Player
 	printf("player x = %f, y = %f\n", player->Pos.x, player->Pos.y);
 	
 	x = fabsf((cosf(degree) * rx)) + player->Pos.x + player->width;
-	y = (sinf(degree) * ry) + player->Pos.y + player->height + (player->JumHeight * 3 / 4);
+	y = (sinf(degree) * ry) + player->Pos.y + player->height + (player->JumHe[i]ght * 3 / 4);
 	printf("x = %f, y = %f\n", x, y);
 
 	tileSize = CP_Random_RangeInt(1, 3);
