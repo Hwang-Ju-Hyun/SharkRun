@@ -43,7 +43,7 @@ void main_update(void)
 		CP_Graphics_ClearBackground(bgColor);
 		int width = WINDOW_WIDTH;
 		int height = WINDOW_HEIGHT;		
-		CP_Image_Draw(Digipen, (float)width/2-20.f, (float)height/2-20.f , (float)width , (float)height , 255);
+		CP_Image_Draw(Digipen, (float)width/2, (float)height/2, (float)width , (float)height-50.f, 255);
 	}
 	else
 	{

@@ -274,16 +274,17 @@ void game_update(void)
     //Alive Texture draw
     {
         if (player.IsAlive == true)
-        {
-            CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
-            char buffer[50] = { 0 };
+        {   
             CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
-            CP_Settings_TextSize(50.0f);
-            sprintf_s(buffer, 50, "TIME : %f", AccTime);
-            CP_Settings_TextSize(50.0f);
-            CP_Font_DrawText(buffer, 225, 650);
+            CP_Settings_TextSize(50.f);
+            CP_Font_DrawText("TIME : ", 225, 650);
+
+            CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
+            char buffer[50] = { 0 };            
+            sprintf_s(buffer, 50, "%f", AccTime);            
+            CP_Font_DrawText(buffer, 460, 650);
         }        
-    }
+    }       
     
     
     if (camera.cameraChange == true)
