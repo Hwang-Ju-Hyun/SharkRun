@@ -86,6 +86,7 @@ void SetHeight(struct Player* _pPlayer)
 {
 	_pPlayer->height = (float)CP_Image_GetHeight(_pPlayer->res[0]);
 }
+
 const CP_Vector GetPos(struct Player* _pPlayer)	
 {
 	return _pPlayer->Pos;

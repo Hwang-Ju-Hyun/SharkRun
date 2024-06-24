@@ -64,18 +64,23 @@ void handleCollision(struct Player* p, struct Platform* plat)
 
 //폰트
 CP_Font myFont;
-//사운드
 
+//사운드
 CP_Sound jump_sound1 = NULL;
 CP_Sound jump_sound2 = NULL;
 CP_Sound jump_sound3 = NULL;
 CP_Sound death_sound = NULL;
 
+
+
+
 void game_init(void)
 {
     white = CP_Color_Create(255, 255, 255, 255);
 	bgImg = CP_Image_Load("Assets\\bg.png");
-    
+   
+
+
     //폰트 로드
     myFont=CP_Font_Load("Assets/upheavtt.ttf");
     if (myFont == NULL)
@@ -97,8 +102,6 @@ void game_init(void)
     SharkInit(&shark);
     //카메라 초기로드
     Camera_Init(&camera);
-
-    
 
     //플랫폼 초기화
     if (mP != NULL)
@@ -130,8 +133,8 @@ void PlayerColliderDraw()
 
 
 void game_update(void)
-{
-    CP_Graphics_ClearBackground(white);
+{    
+    CP_Graphics_ClearBackground(white);    
     CP_Settings_Fill(CP_Color_Create(0, 255, 255, 255));
     CP_Font_Set(myFont);
     /*if (CP_Input_MouseTriggered(MOUSE_BUTTON_RIGHT))
@@ -289,13 +292,13 @@ void game_update(void)
         CamTexAccTimeInt =(int)CamTexAccTime;
         CP_Settings_Fill(CP_Color_Create(255, 0, 0, 255));
         CP_Settings_TextSize(40.f);
-        CP_Font_DrawText("!!ARROW KEY REVERSED!!", 650, 640);        
+        CP_Font_DrawText("!!ARROW KEY REVERSED!!", 750, 640);        
     }
     if (CamTexAccTimeInt % 3 == 0&& camera.cameraChange == true)
     {
         CP_Settings_Fill(CP_Color_Create(0, 0, 255, 255));
         CP_Settings_TextSize(40.f);
-        CP_Font_DrawText("!!ARROW KEY REVERSED!!", 650, 640);
+        CP_Font_DrawText("!!ARROW KEY REVERSED!!", 750, 640);
     }
     
 
@@ -358,6 +361,7 @@ void game_update(void)
             game_init();
             player.IsAlive = true;
             AccTimeAdd = true;
+            IsdeathSound = false;
         }
         if (CP_Input_KeyTriggered(KEY_Q))
         {
