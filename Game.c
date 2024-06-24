@@ -18,7 +18,7 @@ int CamTexAccTimeInt = 0;
 bool AccTimeAdd = true;
 float texTime = 0.f;
 int AcctexTimeInt = 0;
-
+bool IsdeathSound = false;
 
 //↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 //털끝 하나 건들지 말것
@@ -65,7 +65,11 @@ void handleCollision(struct Player* p, struct Platform* plat)
 //폰트
 CP_Font myFont;
 //사운드
-CP_Sound mySound = NULL;
+
+CP_Sound jump_sound1 = NULL;
+CP_Sound jump_sound2 = NULL;
+CP_Sound jump_sound3 = NULL;
+CP_Sound death_sound = NULL;
 
 void game_init(void)
 {
@@ -79,7 +83,12 @@ void game_init(void)
         printf("凸");
         return;
     }
-        
+    //사운드 로드
+    death_sound = CP_Sound_Load("./Assets/death.wav");
+    jump_sound1 = CP_Sound_Load("./Assets/jump1.wav");
+    jump_sound2 = CP_Sound_Load("./Assets/jump2.wav");
+    jump_sound3 = CP_Sound_Load("./Assets/jump3.wav");
+    //플렛폼 로드
     InitTileImg(tile);
 
     //플레이어 초기로드
@@ -89,9 +98,9 @@ void game_init(void)
     //카메라 초기로드
     Camera_Init(&camera);
 
-    //아이템 정보 초기로드
-    //InitItem(&item);
+    
 
+    //플랫폼 초기화
     if (mP != NULL)
     {
         DeallocatePlatform(mP);
@@ -101,17 +110,7 @@ void game_init(void)
     mP->pf = NULL;
     int ch = LoadPlatformFromFile(mP, &player);
     printf("ch = %d\n", ch);
-    AccTime = 0.f;
-	
-	/*for (int i = 0; i < platforms.total; i++)
-	{
-		printf("n = %d, pos = %f %f, size = %f %f\n",
-			platforms.total, platforms.platform[i].Pos.x, platforms.platform[i].Pos.y, platforms.platform[i].width, platforms.platform[i].height);
-		
-		printf("gap = %f %f, type = %d, color = %d %d %d %d\n",
-			platforms.platform[i].gap.x, platforms.platform[i].gap.y, platforms.platform[i].type, platforms.platform[i].color.r, platforms.platform[i].color.g, platforms.platform[i].color.b, platforms.platform[i].color.a);
-	}*/
-	
+    AccTime = 0.f;	
 }
 
 void PlatColliderDraw()
@@ -162,6 +161,23 @@ void game_update(void)
     {
         Move_Player(&player, mP, time);
         SharkMove(&shark, time, &player);
+    }
+    if (player.soundOccur)
+    {
+        int rand = CP_Random_RangeInt(0, 2);
+        switch (rand)
+        {
+        case 0:
+            CP_Sound_Play(jump_sound1);
+            break;
+        case 1:
+            CP_Sound_Play(jump_sound2);
+            break;
+        case 2:
+            CP_Sound_Play(jump_sound3);
+            break;
+        }
+        player.soundOccur = false;
     }
 
     // 중력 처리
@@ -281,7 +297,8 @@ void game_update(void)
         CP_Settings_TextSize(40.f);
         CP_Font_DrawText("!!ARROW KEY REVERSED!!", 650, 640);
     }
-   
+    
+
 
     //플레이어가 땅아래로 추락할시 게임 종료
     if ((WINDOW_HEIGHT <= GetRenderPlayerPos(&player,&camera).y)&& player.velocityY>=1000
@@ -292,7 +309,14 @@ void game_update(void)
         CP_Settings_Stroke(CP_Color_Create(0, 0, 0, 255));
         CP_Graphics_DrawRect((WINDOW_WIDTH / 2) - 250, (WINDOW_HEIGHT / 2) - 120, 500, 300);
         CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
-
+        
+        if (IsdeathSound == false)
+        {
+            CP_Sound_Play(death_sound); //으르르르를~ 깨개깽
+            IsdeathSound = true;
+        }
+        
+        
         texTime += CP_System_GetDt()+0.f;
         AcctexTimeInt =(int)texTime;
         char buffer[50] = { 0 };
@@ -327,7 +351,7 @@ void game_update(void)
     }
     if (player.IsAlive == false)
     {
-        mP->total = 0;        
+        mP->total = 0;             
         //재시작
         if (CP_Input_KeyTriggered(KEY_R))
         {          
@@ -353,4 +377,8 @@ void game_exit(void)
 
 	SharkFree(&shark);
 	FreeImg(tile);
+    CP_Sound_Free(&jump_sound1);
+    CP_Sound_Free(&jump_sound2);
+    CP_Sound_Free(&jump_sound3);
+    CP_Sound_Free(&death_sound);
 }

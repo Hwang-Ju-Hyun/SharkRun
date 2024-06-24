@@ -47,3 +47,10 @@ enum PLATFORM_TYPE
 	NORMAL = 0,
 	//ºÒ, ¹°...ETC
 };
+
+enum JUMP_SOUND
+{
+	JUMP1=0,
+	JUMP2=1,
+	JUMP3=2
+};

@@ -2,6 +2,7 @@
 #include "Player.h"
 #include "Collision.h"
 
+
 void PlayerInit(struct Player* p)
 {
 	p->res[0] = CP_Image_Load("Assets\\dog_left.png");
@@ -23,6 +24,8 @@ void PlayerInit(struct Player* p)
 	
 	p->d = RIGHT;	
 	p->IsAlive = true;
+
+	p->soundOccur = false;
 	//p->IsPlayerItemGet = false;
 }
 
@@ -54,7 +57,6 @@ void PlayerDraw(struct Player* p, struct Camera* c)
 	Render.y = GetRenderPlayerPos(p, c).y;
 	CP_Image_Draw(tmp, Render.x, Render.y, p->width, p->height, p->alpha);
 }
-
 void Draw_Player(struct Player* _pPlayer, struct Camera* c)
 {
 	/*CP_Settings_Fill(CP_Color_Create(255, 0, 0, 255));
@@ -106,6 +108,7 @@ void Move_Player(struct Player* _pPlayer,struct Platforms* _pPlatforms, float dt
 		{
 			_pPlayer->velocityY -= _pPlayer->JumHeight;
 			_pPlayer->IsGrounded = AIR;
+			_pPlayer->soundOccur = true;
 		}		
 	}		
 	// 좌우 이동 처리
